@@ -25,7 +25,7 @@ export async function getPublicMajlisBySlug(
 ): Promise<PublicMajlis | null> {
   const supabase = createSupabaseServerClient();
 
-  const { data, error } = await supabase
+  const { data: majlis, error: majlisError } = await supabase
     .from("majlis_rooms")
     .select(
       `
@@ -38,23 +38,38 @@ export async function getPublicMajlisBySlug(
       default_language,
       status,
       created_at,
-      updated_at,
-      room_activities (
-        id,
-        activity_type,
-        enabled
-      )
+      updated_at
     `
     )
     .eq("slug", slug)
     .eq("status", "active")
-    .single();
+    .maybeSingle();
 
-  if (error || !data) {
+  if (majlisError) {
+    console.error("Majlis fetch error:", majlisError.message);
     return null;
   }
 
-  return data as PublicMajlis;
+  if (!majlis) {
+    console.error("Majlis not found for slug:", slug);
+    return null;
+  }
+
+  const { data: activities, error: activitiesError } = await supabase
+    .from("room_activities")
+    .select("id, activity_type, enabled")
+    .eq("room_id", majlis.id)
+    .eq("enabled", true);
+
+  if (activitiesError) {
+    console.error("Activities fetch error:", activitiesError.message);
+    return null;
+  }
+
+  return {
+    ...majlis,
+    room_activities: activities || [],
+  } as PublicMajlis;
 }
 
 export function getEnabledActivities(majlis: PublicMajlis) {

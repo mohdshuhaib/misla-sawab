@@ -1,16 +1,57 @@
 {
   "app": {
     "name": "Misla Sawab",
-    "createMajlis": "പുതിയ മജ്ലിസ് സൃഷ്ടിക്കുക",
-    "language": "ഭാഷ",
+    "tagline": "നന്മയുടെ മജ്ലിസ്",
+    "createMajlis": "പുതിയ മജ്ലിസ്",
+    "createMajlisFull": "പുതിയ മജ്ലിസ് സൃഷ്ടിക്കുക",
+    "home": "ഹോം",
+    "activeMajlis": "സജീവ മജ്ലിസുകൾ",
+    "share": "പങ്കിടുക",
+    "stats": "കണക്കുകൾ",
+    "backHome": "ഹോമിലേക്ക് മടങ്ങുക",
+    "backToMajlis": "മജ്ലിസിലേക്ക് മടങ്ങുക",
     "linkCopied": "ലിങ്ക് കോപ്പി ചെയ്തു",
-    "messageCopied": "സന്ദേശം കോപ്പി ചെയ്തു"
+    "messageCopied": "സന്ദേശം കോപ്പി ചെയ്തു",
+    "loadingMajlis": "മജ്ലിസ് ലോഡ് ചെയ്യുന്നു..."
+  },
+  "home": {
+    "badge": "Malayalam-first Islamic contribution platform",
+    "title": "നന്മയുടെ മജ്ലിസ് ഇനി ലളിതമായി നിയന്ത്രിക്കാം",
+    "description": "ഖത്ത്മുൽ ഖുർആൻ, സൂറത്ത് പാരായണം, ദിക്റ് / അദ്കാർ സംഭാവനകൾ WhatsApp ഗ്രൂപ്പിൽ തിരക്കില്ലാതെ മനോഹരമായി ക്രമീകരിക്കാൻ Misla Sawab സഹായിക്കുന്നു.",
+    "viewFeatures": "സവിശേഷതകൾ കാണുക"
   },
   "activities": {
     "fathiha": "സൂറത്തുൽ ഫാത്തിഹ",
     "yaseen": "സൂറത്ത് യാസീൻ",
     "khatmulQuran": "ഖത്ത്മുൽ ഖുർആൻ",
-    "dhikr": "ദിക്റ് / അദ്കാർ"
+    "dhikr": "ദിക്റ് / അദ്കാർ",
+    "khatmulQuranDescription": "30 ജുസ് സുരക്ഷിതമായി തിരഞ്ഞെടുത്ത് പൂർത്തീകരണം കാണിക്കുക.",
+    "dhikrDescription": "ദിക്റ് തരം, എണ്ണം, സംഭാവകർ, മൊത്തം കണക്ക് എന്നിവ സൂക്ഷിക്കുക.",
+    "surahDescription": "ഫാത്തിഹ, യാസീൻ പാരായണങ്ങൾ പേര് സഹിതം രേഖപ്പെടുത്തുക.",
+    "shareDescription": "മലയാളം ഇസ്ലാമിക് സന്ദേശത്തോടുകൂടി മജ്ലിസ് ലിങ്കുകൾ പങ്കിടുക."
+  },
+  "create": {
+    "title": "പുതിയ മജ്ലിസ് സൃഷ്ടിക്കുക",
+    "description": "ഖത്ത്മുൽ ഖുർആൻ, ദിക്റ് / അദ്കാർ, സൂറത്ത് പാരായണം എന്നിവക്കായി ഒരു പൊതുവായ മജ്ലിസ് ലിങ്ക് സൃഷ്ടിക്കുക.",
+    "forWhom": "ആർക്കുവേണ്ടി?",
+    "forWhomPlaceholder": "ഉദാ: മർഹൂം അബ്ദുള്ള",
+    "purpose": "നിയ്യത്ത് / ഉദ്ദേശ്യം",
+    "purposePlaceholder": "ഉദാ: മഗ്ഫിറത്തിനായി",
+    "majlisName": "മജ്ലിസ് പേര്",
+    "majlisNamePlaceholder": "ഒഴിഞ്ഞുവിട്ടാൽ സ്വയം സൃഷ്ടിക്കും",
+    "descriptionLabel": "വിവരണം",
+    "descriptionPlaceholder": "കുടുംബവും നാട്ടുകാരും ചേർന്ന് നടത്തുന്ന നന്മയുടെ മജ്ലിസ്...",
+    "activitiesLabel": "പ്രവർത്തനങ്ങൾ തിരഞ്ഞെടുക്കുക",
+    "cancel": "റദ്ദാക്കുക",
+    "creating": "സൃഷ്ടിക്കുന്നു...",
+    "submit": "മജ്ലിസ് സൃഷ്ടിക്കുക",
+    "success": "മജ്ലിസ് വിജയകരമായി സൃഷ്ടിച്ചു",
+    "publicLink": "Public Majlis Link",
+    "managerLink": "Private Manager Link",
+    "copyPublicLink": "Public Link Copy ചെയ്യുക",
+    "copyManagerLink": "Manager Link Copy ചെയ്യുക",
+    "openPublicMajlis": "Public Majlis തുറക്കുക",
+    "close": "അടയ്ക്കുക"
   },
   "errors": {
     "juzAlreadySelected": "ഈ ജുസ് ഇതിനകം തിരഞ്ഞെടുക്കപ്പെട്ടിരിക്കുന്നു.",

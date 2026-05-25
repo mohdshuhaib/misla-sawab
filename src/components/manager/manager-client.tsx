@@ -40,7 +40,6 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,31 +54,31 @@ const activityOptions: {
   description: string;
   icon: typeof BookOpen;
 }[] = [
-  {
-    value: "khatmul_quran",
-    label: "ഖത്ത്മുൽ ഖുർആൻ",
-    description: "Juz selection and Khatam progress",
-    icon: BookOpen,
-  },
-  {
-    value: "dhikr",
-    label: "ദിക്റ് / അദ്കാർ",
-    description: "Dhikr counts and contributor stats",
-    icon: MessageCircleHeart,
-  },
-  {
-    value: "yaseen",
-    label: "സൂറത്ത് യാസീൻ",
-    description: "Surah Ya-Sin recitation count",
-    icon: HeartHandshake,
-  },
-  {
-    value: "fathiha",
-    label: "സൂറത്തുൽ ഫാത്തിഹ",
-    description: "Surah Al-Fatihah recitation count",
-    icon: Sparkles,
-  },
-];
+    {
+      value: "khatmul_quran",
+      label: "ഖത്ത്മുൽ ഖുർആൻ",
+      description: "Juz selection and Khatam progress",
+      icon: BookOpen,
+    },
+    {
+      value: "dhikr",
+      label: "ദിക്റ് / അദ്കാർ",
+      description: "Dhikr counts and contributor stats",
+      icon: MessageCircleHeart,
+    },
+    {
+      value: "yaseen",
+      label: "സൂറത്ത് യാസീൻ",
+      description: "Surah Ya-Sin recitation count",
+      icon: HeartHandshake,
+    },
+    {
+      value: "fathiha",
+      label: "സൂറത്തുൽ ഫാത്തിഹ",
+      description: "Surah Al-Fatihah recitation count",
+      icon: Sparkles,
+    },
+  ];
 
 export function ManagerClient({ slug }: ManagerClientProps) {
   const router = useRouter();
@@ -482,16 +481,29 @@ export function ManagerClient({ slug }: ManagerClientProps) {
                       const Icon = activity.icon;
                       const checked = activities.includes(activity.value);
 
+                      function handleToggleActivity() {
+                        toggleActivity(activity.value);
+                      }
+
                       return (
-                        <button
+                        <div
                           key={activity.value}
-                          type="button"
-                          onClick={() => toggleActivity(activity.value)}
+                          role="checkbox"
+                          aria-checked={checked}
+                          tabIndex={0}
+                          onClick={handleToggleActivity}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              handleToggleActivity();
+                            }
+                          }}
                           className={cn(
-                            "flex min-h-24 items-start gap-3 rounded-3xl border p-4 text-left transition",
+                            "flex min-h-24 cursor-pointer items-start gap-3 rounded-3xl border p-4 text-left transition",
+                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2",
                             checked
-                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40"
-                              : "border-emerald-100 bg-white/60 hover:bg-emerald-50 dark:border-emerald-900 dark:bg-slate-950/30"
+                              ? "border-emerald-500 bg-emerald-50"
+                              : "border-emerald-100 bg-white/60 hover:bg-emerald-50"
                           )}
                         >
                           <div
@@ -499,7 +511,7 @@ export function ManagerClient({ slug }: ManagerClientProps) {
                               "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl",
                               checked
                                 ? "bg-emerald-600 text-white"
-                                : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100"
+                                : "bg-emerald-100 text-emerald-700"
                             )}
                           >
                             <Icon className="h-5 w-5" />
@@ -507,21 +519,28 @@ export function ManagerClient({ slug }: ManagerClientProps) {
 
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center justify-between gap-2">
-                              <p className="font-bold text-emerald-950 dark:text-emerald-50">
+                              <p className="font-bold text-emerald-950">
                                 {activity.label}
                               </p>
 
-                              <Checkbox
-                                checked={checked}
-                                className="pointer-events-none rounded-md"
-                              />
+                              <span
+                                className={cn(
+                                  "flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition",
+                                  checked
+                                    ? "border-emerald-600 bg-emerald-600 text-white"
+                                    : "border-emerald-300 bg-white"
+                                )}
+                                aria-hidden="true"
+                              >
+                                {checked ? <Check className="h-3.5 w-3.5" /> : null}
+                              </span>
                             </div>
 
                             <p className="mt-1 text-sm leading-5 text-muted-foreground">
                               {activity.description}
                             </p>
                           </div>
-                        </button>
+                        </div>
                       );
                     })}
                   </div>
@@ -761,11 +780,10 @@ function SimpleRecitationManagerList({
           <ContributionRow
             key={item.id}
             title={item.contributor_name}
-            subtitle={`${
-              item.activity_type === "fathiha"
-                ? "സൂറത്തുൽ ഫാത്തിഹ"
-                : "സൂറത്ത് യാസീൻ"
-            } × ${item.count.toLocaleString("en-IN")}`}
+            subtitle={`${item.activity_type === "fathiha"
+              ? "സൂറത്തുൽ ഫാത്തിഹ"
+              : "സൂറത്ത് യാസീൻ"
+              } × ${item.count.toLocaleString("en-IN")}`}
             badge={item.activity_type === "fathiha" ? "Fathiha" : "Ya-Sin"}
             date={item.created_at}
             onDelete={() => onDelete(item.id)}

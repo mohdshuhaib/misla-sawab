@@ -1,31 +1,33 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Languages } from "lucide-react";
+import { useLocale } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 
 export function LanguageSwitcher() {
+  const router = useRouter();
+  const locale = useLocale();
+
   function switchLanguage() {
-    const currentCookie = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("MISLA_LOCALE="));
+    const nextLocale = locale === "ml" ? "en" : "ml";
 
-    const currentLocale = currentCookie?.split("=")[1] || "ml";
-    const nextLocale = currentLocale === "ml" ? "en" : "ml";
+    document.cookie = `MISLA_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
 
-    document.cookie = `MISLA_LOCALE=${nextLocale}; path=/; max-age=31536000`;
-    window.location.reload();
+    router.refresh();
   }
 
   return (
     <Button
       type="button"
       variant="outline"
-      className="h-10 rounded-full border-emerald-200 bg-white/70 text-emerald-800 hover:bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-100"
+      size="sm"
+      className="h-10 rounded-full border-emerald-200 bg-white/70 px-3 text-emerald-800 hover:bg-emerald-50"
       onClick={switchLanguage}
     >
-      <Languages className="mr-2 h-4 w-4" />
-      ML / EN
+      <Languages className="mr-1.5 h-4 w-4" />
+      {locale === "ml" ? "EN" : "ML"}
     </Button>
   );
 }

@@ -1,10 +1,12 @@
 import Link from "next/link";
-import { BookOpen, HeartHandshake, Home, Sparkles } from "lucide-react";
+import { BookOpen, HeartHandshake, Home } from "lucide-react";
 
 import { getActiveMajlisList } from "@/lib/majlis/list-majlis";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import Image from "next/image";
+import { BRAND } from "@/lib/constants/brand";
 
 export async function MajlisSidebar() {
   const activeMajlis = await getActiveMajlisList();
@@ -13,8 +15,14 @@ export async function MajlisSidebar() {
     <aside className="sticky top-20 hidden h-[calc(100vh-6rem)] w-80 shrink-0 lg:block">
       <Card className="glass-card flex h-full flex-col rounded-[2rem] p-4">
         <div className="mb-5 flex items-center gap-3 px-2">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-600 text-white">
-            <Sparkles className="h-5 w-5" />
+          <div className="relative h-12 w-12 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-emerald-100">
+            <Image
+              src={BRAND.logo}
+              alt={`${BRAND.name} Logo`}
+              fill
+              sizes="48px"
+              className="object-contain p-1.5"
+            />
           </div>
 
           <div>

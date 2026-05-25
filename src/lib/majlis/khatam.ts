@@ -1,5 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
 
+export type JuzContributionStatus = "selected" | "completed";
+
 export type JuzContribution = {
   id: string;
   room_id: string;
@@ -7,7 +9,9 @@ export type JuzContribution = {
   juz_number: number;
   contributor_id: string;
   contributor_name: string;
+  status: JuzContributionStatus;
   created_at: string;
+  completed_at: string | null;
 };
 
 export type KhatamState = {
@@ -41,7 +45,9 @@ export async function getLatestKhatamState(
 
   const { data: contributions, error: contributionsError } = await supabase
     .from("juz_contributions")
-    .select("id, room_id, khatam_id, juz_number, contributor_id, created_at")
+    .select(
+      "id, room_id, khatam_id, juz_number, contributor_id, status, created_at, completed_at"
+    )
     .eq("room_id", roomId)
     .eq("khatam_id", khatam.id)
     .order("juz_number", { ascending: true });
@@ -78,6 +84,7 @@ export async function getLatestKhatamState(
     ...khatam,
     contributions: (contributions || []).map((item) => ({
       ...item,
+      status: item.status as JuzContributionStatus,
       contributor_name:
         contributorNameMap.get(item.contributor_id) || "Unknown",
     })),
@@ -91,6 +98,26 @@ export async function selectJuzContribution(params: {
   displayName: string;
 }) {
   const { data, error } = await supabase.rpc("select_juz", {
+    p_room_id: params.roomId,
+    p_khatam_id: params.khatamId,
+    p_juz_numbers: params.juzNumbers,
+    p_display_name: params.displayName,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function completeJuzContribution(params: {
+  roomId: string;
+  khatamId: string;
+  juzNumbers: number[];
+  displayName: string;
+}) {
+  const { data, error } = await supabase.rpc("complete_juz", {
     p_room_id: params.roomId,
     p_khatam_id: params.khatamId,
     p_juz_numbers: params.juzNumbers,

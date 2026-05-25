@@ -17,9 +17,10 @@ export async function getActiveMajlisList(): Promise<MajlisListItem[]> {
     .select("id, slug, title, purpose, for_whom, created_at")
     .eq("status", "active")
     .order("created_at", { ascending: false })
-    .limit(12);
+    .limit(30);
 
   if (error) {
+    console.error("Active Majlis list fetch error:", error.message);
     return [];
   }
 

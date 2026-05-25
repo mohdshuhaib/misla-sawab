@@ -2,13 +2,9 @@ export const APP_NAME = "Misla Sawab";
 
 export const NAV_LINKS = [
   {
+    id: "home",
     labelMl: "ഹോം",
     labelEn: "Home",
-    href: "/",
-  },
-  {
-    labelMl: "സജീവ മജ്ലിസുകൾ",
-    labelEn: "Active Majlis",
     href: "/",
   },
 ];

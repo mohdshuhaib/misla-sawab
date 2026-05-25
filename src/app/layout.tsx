@@ -1,24 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 
 import "./globals.css";
 
-import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Toaster } from "@/components/ui/sonner";
-import { getAppUrl } from "@/lib/utils/app-url";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://YOUR-DOMAIN.vercel.app"),
@@ -117,16 +104,14 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider>
             <div className="min-h-screen islamic-pattern">
               <Navbar />
               {children}
             </div>
 
             <Toaster richColors position="top-center" />
-          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

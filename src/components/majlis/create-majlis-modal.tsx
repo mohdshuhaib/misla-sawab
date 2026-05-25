@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import {
   BookOpen,
   Check,
@@ -17,6 +18,7 @@ import {
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import Image from "next/image";
 
 import {
   createMajlis,
@@ -26,7 +28,6 @@ import {
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -46,6 +47,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { getAppUrl } from "@/lib/utils/app-url";
+import { BRAND } from "@/lib/constants/brand";
 
 const activityOptions: {
   value: MajlisActivity;
@@ -53,31 +55,31 @@ const activityOptions: {
   description: string;
   icon: typeof BookOpen;
 }[] = [
-  {
-    value: "khatmul_quran",
-    label: "ഖത്ത്മുൽ ഖുർആൻ",
-    description: "30 ജുസ് തിരഞ്ഞെടുത്ത് ഖത്തം പൂർത്തിയാക്കുക",
-    icon: BookOpen,
-  },
-  {
-    value: "dhikr",
-    label: "ദിക്റ് / അദ്കാർ",
-    description: "ദിക്റ് തരം, എണ്ണം, മൊത്തം കണക്ക്",
-    icon: MessageCircleHeart,
-  },
-  {
-    value: "yaseen",
-    label: "സൂറത്ത് യാസീൻ",
-    description: "യാസീൻ പാരായണ എണ്ണം രേഖപ്പെടുത്തുക",
-    icon: HeartHandshake,
-  },
-  {
-    value: "fathiha",
-    label: "സൂറത്തുൽ ഫാത്തിഹ",
-    description: "ഫാത്തിഹ പാരായണ എണ്ണം രേഖപ്പെടുത്തുക",
-    icon: Sparkles,
-  },
-];
+    {
+      value: "khatmul_quran",
+      label: "ഖത്ത്മുൽ ഖുർആൻ",
+      description: "30 ജുസ് തിരഞ്ഞെടുത്ത് ഖത്തം പൂർത്തിയാക്കുക",
+      icon: BookOpen,
+    },
+    {
+      value: "dhikr",
+      label: "ദിക്റ് / അദ്കാർ",
+      description: "ദിക്റ് തരം, എണ്ണം, മൊത്തം കണക്ക്",
+      icon: MessageCircleHeart,
+    },
+    {
+      value: "yaseen",
+      label: "സൂറത്ത് യാസീൻ",
+      description: "യാസീൻ പാരായണ എണ്ണം രേഖപ്പെടുത്തുക",
+      icon: HeartHandshake,
+    },
+    {
+      value: "fathiha",
+      label: "സൂറത്തുൽ ഫാത്തിഹ",
+      description: "ഫാത്തിഹ പാരായണ എണ്ണം രേഖപ്പെടുത്തുക",
+      icon: Sparkles,
+    },
+  ];
 
 const formSchema = z.object({
   title: z.string().optional(),
@@ -119,6 +121,9 @@ export function CreateMajlisModal() {
   });
 
   const appUrl = useMemo(() => getAppUrl(), []);
+  const t = useTranslations("create");
+  const app = useTranslations("app");
+  const activitiesText = useTranslations("activities");
 
   const publicLink = createdMajlis
     ? `${appUrl}/m/${createdMajlis.slug}`
@@ -162,7 +167,7 @@ export function CreateMajlisModal() {
       });
 
       setCreatedMajlis(result);
-      toast.success("മജ്ലിസ് വിജയകരമായി സൃഷ്ടിച്ചു");
+      toast.success(app("linkCopied"));
     } catch (error) {
       const message =
         error instanceof Error
@@ -182,17 +187,22 @@ export function CreateMajlisModal() {
 
           <div className="relative p-6 sm:p-8">
             <DialogHeader>
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-3xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/20">
-                <Sparkles className="h-6 w-6" />
+              <div className="relative mb-4 h-16 w-16 overflow-hidden rounded-3xl bg-white shadow-lg shadow-emerald-600/20 ring-1 ring-emerald-100">
+                <Image
+                  src={BRAND.logo}
+                  alt={`${BRAND.name} Logo`}
+                  fill
+                  sizes="64px"
+                  className="object-contain p-2"
+                />
               </div>
 
               <DialogTitle className="text-2xl font-black text-emerald-950 dark:text-emerald-50">
-                പുതിയ മജ്ലിസ് സൃഷ്ടിക്കുക
+                {t("title")}
               </DialogTitle>
 
               <DialogDescription className="text-base leading-7">
-                ഖത്ത്മുൽ ഖുർആൻ, ദിക്റ് / അദ്കാർ, സൂറത്ത് പാരായണം എന്നിവക്കായി
-                ഒരു പൊതുവായ മജ്ലിസ് ലിങ്ക് സൃഷ്ടിക്കുക.
+                {t("description")}
               </DialogDescription>
             </DialogHeader>
 
@@ -214,10 +224,10 @@ export function CreateMajlisModal() {
                     name="forWhom"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ആർക്കുവേണ്ടി?</FormLabel>
+                        <FormLabel>{t("forWhom")}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="ഉദാ: മർഹൂം അബ്ദുള്ള"
+                            placeholder={t("forWhomPlaceholder")}
                             className="h-12 rounded-2xl"
                             {...field}
                           />
@@ -236,10 +246,10 @@ export function CreateMajlisModal() {
                     name="purpose"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>നിയ്യത്ത് / ഉദ്ദേശ്യം</FormLabel>
+                        <FormLabel>{t("purpose")}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="ഉദാ: മഗ്ഫിറത്തിനായി"
+                            placeholder={t("purposePlaceholder")}
                             className="h-12 rounded-2xl"
                             {...field}
                           />
@@ -257,10 +267,10 @@ export function CreateMajlisModal() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>മജ്ലിസ് പേര്</FormLabel>
+                        <FormLabel>{t("majlisName")}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="ഒഴിഞ്ഞുവിട്ടാൽ സ്വയം സൃഷ്ടിക്കും"
+                            placeholder={t("majlisNamePlaceholder")}
                             className="h-12 rounded-2xl"
                             {...field}
                           />
@@ -279,10 +289,10 @@ export function CreateMajlisModal() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>വിവരണം</FormLabel>
+                        <FormLabel>{t("descriptionLabel")}</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="കുടുംബവും നാട്ടുകാരും ചേർന്ന് നടത്തുന്ന നന്മയുടെ മജ്ലിസ്..."
+                            placeholder={t("descriptionPlaceholder")}
                             className="min-h-28 rounded-2xl"
                             {...field}
                           />
@@ -298,7 +308,7 @@ export function CreateMajlisModal() {
                     render={({ field }) => (
                       <FormItem>
                         <div>
-                          <FormLabel>പ്രവർത്തനങ്ങൾ തിരഞ്ഞെടുക്കുക</FormLabel>
+                          <FormLabel>{t("activitiesLabel")}</FormLabel>
                           <FormDescription>
                             തിരഞ്ഞെടുക്കുന്ന പ്രവർത്തനങ്ങൾ മാത്രമേ പൊതുജനങ്ങൾക്ക്
                             കാണിക്കൂ.
@@ -308,33 +318,48 @@ export function CreateMajlisModal() {
                         <div className="grid gap-3 sm:grid-cols-2">
                           {activityOptions.map((activity) => {
                             const Icon = activity.icon;
-                            const checked = field.value?.includes(
-                              activity.value
-                            );
+                            const checked = field.value?.includes(activity.value);
+
+                            function toggleActivity() {
+                              const currentValue = field.value || [];
+
+                              if (checked) {
+                                field.onChange(
+                                  currentValue.filter((value) => value !== activity.value)
+                                );
+                              } else {
+                                field.onChange([...currentValue, activity.value]);
+                              }
+                            }
+
+                            const activityLabel =
+                              activity.value === "khatmul_quran"
+                                ? activitiesText("khatmulQuran")
+                                : activity.value === "dhikr"
+                                  ? activitiesText("dhikr")
+                                  : activity.value === "yaseen"
+                                    ? activitiesText("yaseen")
+                                    : activitiesText("fathiha");
 
                             return (
-                              <button
+                              <div
                                 key={activity.value}
-                                type="button"
-                                onClick={() => {
-                                  if (checked) {
-                                    field.onChange(
-                                      field.value.filter(
-                                        (value) => value !== activity.value
-                                      )
-                                    );
-                                  } else {
-                                    field.onChange([
-                                      ...field.value,
-                                      activity.value,
-                                    ]);
+                                role="checkbox"
+                                aria-checked={checked}
+                                tabIndex={0}
+                                onClick={toggleActivity}
+                                onKeyDown={(event) => {
+                                  if (event.key === "Enter" || event.key === " ") {
+                                    event.preventDefault();
+                                    toggleActivity();
                                   }
                                 }}
                                 className={cn(
-                                  "flex min-h-24 items-start gap-3 rounded-3xl border p-4 text-left transition",
+                                  "flex min-h-24 cursor-pointer items-start gap-3 rounded-3xl border p-4 text-left transition",
+                                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2",
                                   checked
-                                    ? "border-emerald-500 bg-emerald-50 shadow-sm dark:bg-emerald-950/40"
-                                    : "border-emerald-100 bg-white/60 hover:bg-emerald-50 dark:border-emerald-900 dark:bg-slate-950/30"
+                                    ? "border-emerald-500 bg-emerald-50 shadow-sm"
+                                    : "border-emerald-100 bg-white/60 hover:bg-emerald-50"
                                 )}
                               >
                                 <div
@@ -342,7 +367,7 @@ export function CreateMajlisModal() {
                                     "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl",
                                     checked
                                       ? "bg-emerald-600 text-white"
-                                      : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100"
+                                      : "bg-emerald-100 text-emerald-700"
                                   )}
                                 >
                                   <Icon className="h-5 w-5" />
@@ -350,21 +375,28 @@ export function CreateMajlisModal() {
 
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center justify-between gap-2">
-                                    <p className="font-bold text-emerald-950 dark:text-emerald-50">
-                                      {activity.label}
+                                    <p className="font-bold text-emerald-950">
+                                      {activityLabel}
                                     </p>
 
-                                    <Checkbox
-                                      checked={checked}
-                                      className="pointer-events-none rounded-md"
-                                    />
+                                    <span
+                                      className={cn(
+                                        "flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition",
+                                        checked
+                                          ? "border-emerald-600 bg-emerald-600 text-white"
+                                          : "border-emerald-300 bg-white"
+                                      )}
+                                      aria-hidden="true"
+                                    >
+                                      {checked ? <Check className="h-3.5 w-3.5" /> : null}
+                                    </span>
                                   </div>
 
                                   <p className="mt-1 text-sm leading-5 text-muted-foreground">
                                     {activity.description}
                                   </p>
                                 </div>
-                              </button>
+                              </div>
                             );
                           })}
                         </div>
@@ -381,7 +413,7 @@ export function CreateMajlisModal() {
                       className="h-12 rounded-full"
                       onClick={closeModal}
                     >
-                      റദ്ദാക്കുക
+                      {t("cancel")}
                     </Button>
 
                     <Button
@@ -392,12 +424,12 @@ export function CreateMajlisModal() {
                       {form.formState.isSubmitting ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          സൃഷ്ടിക്കുന്നു...
+                          {t("creating")}
                         </>
                       ) : (
                         <>
                           <Check className="mr-2 h-4 w-4" />
-                          മജ്ലിസ് സൃഷ്ടിക്കുക
+                          {t("submit")}
                         </>
                       )}
                     </Button>

@@ -1,16 +1,57 @@
 {
   "app": {
     "name": "Misla Sawab",
-    "createMajlis": "Create New Majlis",
-    "language": "Language",
+    "tagline": "Majlis of Good Deeds",
+    "createMajlis": "New Majlis",
+    "createMajlisFull": "Create New Majlis",
+    "home": "Home",
+    "activeMajlis": "Active Majlis",
+    "share": "Share",
+    "stats": "Statistics",
+    "backHome": "Back to Home",
+    "backToMajlis": "Back to Majlis",
     "linkCopied": "Link copied successfully",
-    "messageCopied": "Message copied successfully"
+    "messageCopied": "Message copied successfully",
+    "loadingMajlis": "Loading Majlis..."
+  },
+  "home": {
+    "badge": "Malayalam-first Islamic contribution platform",
+    "title": "Manage a Majlis of good deeds beautifully and easily",
+    "description": "Misla Sawab helps your community manage Khatmul Qur’an, Surah recitations, and Dhikr / Adhkar contributions without crowding WhatsApp groups.",
+    "viewFeatures": "View Features"
   },
   "activities": {
     "fathiha": "Surah Al-Fatihah",
     "yaseen": "Surah Ya-Sin",
     "khatmulQuran": "Khatmul Qur’an",
-    "dhikr": "Dhikr / Adhkar"
+    "dhikr": "Dhikr / Adhkar",
+    "khatmulQuranDescription": "Safely select 30 Juz and track Khatam completion.",
+    "dhikrDescription": "Track Dhikr type, count, contributors, and total statistics.",
+    "surahDescription": "Record Fathiha and Ya-Sin recitations with contributor names.",
+    "shareDescription": "Share Majlis links with respectful Islamic messages."
+  },
+  "create": {
+    "title": "Create New Majlis",
+    "description": "Create a public Majlis link for Khatmul Qur’an, Dhikr / Adhkar, and Surah recitations.",
+    "forWhom": "For whom?",
+    "forWhomPlaceholder": "Example: Late Abdullah",
+    "purpose": "Purpose / Niyyah",
+    "purposePlaceholder": "Example: For maghfirah",
+    "majlisName": "Majlis name",
+    "majlisNamePlaceholder": "Leave empty to generate automatically",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "A good-deed Majlis arranged by family and community...",
+    "activitiesLabel": "Select activities",
+    "cancel": "Cancel",
+    "creating": "Creating...",
+    "submit": "Create Majlis",
+    "success": "Majlis created successfully",
+    "publicLink": "Public Majlis Link",
+    "managerLink": "Private Manager Link",
+    "copyPublicLink": "Copy Public Link",
+    "copyManagerLink": "Copy Manager Link",
+    "openPublicMajlis": "Open Public Majlis",
+    "close": "Close"
   },
   "errors": {
     "juzAlreadySelected": "This Juz has already been selected.",
