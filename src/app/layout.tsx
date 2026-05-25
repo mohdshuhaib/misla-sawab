@@ -8,7 +8,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://YOUR-DOMAIN.vercel.app"),
+  metadataBase: new URL("https://misla-sawab.vercel.app"),
 
   title: {
     default: "Misla Sawab | നന്മയുടെ മജ്ലിസ്",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     title: "Misla Sawab | നന്മയുടെ മജ്ലിസ്",
     description:
       "Create and share Malayalam-first Khatmul Qur’an, Dhikr / Adhkar, Surah Ya-Sin, and Surah Al-Fatihah contribution Majlis links.",
-    url: "https://YOUR-DOMAIN.vercel.app",
+    url: "https://misla-sawab.vercel.app/login",
     siteName: "Misla Sawab",
     images: [
       {
