@@ -1,0 +1,20 @@
+{
+  "app": {
+    "name": "Misla Sawab",
+    "createMajlis": "Create New Majlis",
+    "language": "Language",
+    "linkCopied": "Link copied successfully",
+    "messageCopied": "Message copied successfully"
+  },
+  "activities": {
+    "fathiha": "Surah Al-Fatihah",
+    "yaseen": "Surah Ya-Sin",
+    "khatmulQuran": "Khatmul Qur’an",
+    "dhikr": "Dhikr / Adhkar"
+  },
+  "errors": {
+    "juzAlreadySelected": "This Juz has already been selected.",
+    "enterName": "Enter your name",
+    "enterCount": "Enter a valid count"
+  }
+}

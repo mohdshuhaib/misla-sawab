@@ -1,0 +1,20 @@
+{
+  "app": {
+    "name": "Misla Sawab",
+    "createMajlis": "പുതിയ മജ്ലിസ് സൃഷ്ടിക്കുക",
+    "language": "ഭാഷ",
+    "linkCopied": "ലിങ്ക് കോപ്പി ചെയ്തു",
+    "messageCopied": "സന്ദേശം കോപ്പി ചെയ്തു"
+  },
+  "activities": {
+    "fathiha": "സൂറത്തുൽ ഫാത്തിഹ",
+    "yaseen": "സൂറത്ത് യാസീൻ",
+    "khatmulQuran": "ഖത്ത്മുൽ ഖുർആൻ",
+    "dhikr": "ദിക്റ് / അദ്കാർ"
+  },
+  "errors": {
+    "juzAlreadySelected": "ഈ ജുസ് ഇതിനകം തിരഞ്ഞെടുക്കപ്പെട്ടിരിക്കുന്നു.",
+    "enterName": "പേര് നൽകുക",
+    "enterCount": "എണ്ണം ശരിയായി നൽകുക"
+  }
+}
