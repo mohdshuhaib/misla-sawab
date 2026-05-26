@@ -8,7 +8,6 @@ export type MajlisActivity =
 
 export type CreateMajlisInput = {
   title?: string;
-  purpose: string;
   forWhom: string;
   description?: string;
   defaultLanguage: "ml" | "en";
@@ -26,7 +25,6 @@ export async function createMajlis(
 ): Promise<CreateMajlisResult> {
   const { data, error } = await supabase.rpc("create_majlis", {
     p_title: input.title || "",
-    p_purpose: input.purpose,
     p_for_whom: input.forWhom,
     p_description: input.description || "",
     p_default_language: input.defaultLanguage,

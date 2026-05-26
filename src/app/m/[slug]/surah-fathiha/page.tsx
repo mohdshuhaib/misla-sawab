@@ -22,18 +22,18 @@ export async function generateMetadata({
 
   if (!majlis) {
     return {
-      title: "Surah Al-Fatihah Majlis not found | Misla Sawab",
+      title: "Fathiha + Ikhlas + Falaq + Naas Majlis not found | Misla Sawab",
     };
   }
 
-  const titleMl = `${majlis.for_whom} അവർക്കുവേണ്ടിയുള്ള സൂറത്തുൽ ഫാത്തിഹ മജ്ലിസ്`;
+  const titleMl = `${majlis.for_whom} - Fathiha + Ikhlas + Falaq + Naas Majlis`;
 
   return {
     title: `${titleMl} | Misla Sawab`,
-    description: majlis.purpose,
+    description: majlis.description || majlis.title,
     openGraph: {
       title: titleMl,
-      description: `${majlis.purpose} | Misla Sawab`,
+      description: `${majlis.description || majlis.title} | Misla Sawab`,
       siteName: "Misla Sawab",
       type: "website",
     },
@@ -53,8 +53,7 @@ export default async function SurahFathihaPage({ params }: PageProps) {
       roomId={majlis.id}
       slug={majlis.slug}
       title={majlis.title}
-      forWhom={majlis.for_whom}
-      purpose={majlis.purpose}
+      forWhom={majlis.for_whom}
       activityType="fathiha"
     />
   );

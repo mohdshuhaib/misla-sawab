@@ -1,15 +1,17 @@
+import Image from "next/image";
 import Link from "next/link";
 import { BookOpen, HeartHandshake, Home } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
+import { BRAND } from "@/lib/constants/brand";
 import { getActiveMajlisList } from "@/lib/majlis/list-majlis";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import Image from "next/image";
-import { BRAND } from "@/lib/constants/brand";
 
 export async function MajlisSidebar() {
   const activeMajlis = await getActiveMajlisList();
+  const t = await getTranslations("app");
 
   return (
     <aside className="sticky top-20 hidden h-[calc(100vh-6rem)] w-80 shrink-0 lg:block">
@@ -27,9 +29,9 @@ export async function MajlisSidebar() {
 
           <div>
             <p className="font-bold text-emerald-950 dark:text-emerald-50">
-              മജ്ലിസ് ലിസ്റ്റ്
+              {t("majlisList")}
             </p>
-            <p className="text-sm text-muted-foreground">സജീവ മജ്ലിസുകൾ</p>
+            <p className="text-sm text-muted-foreground">{t("activeMajlis")}</p>
           </div>
         </div>
 
@@ -41,7 +43,7 @@ export async function MajlisSidebar() {
           >
             <Link href="/">
               <Home className="mr-2 h-4 w-4" />
-              ഹോം
+              {t("home")}
             </Link>
           </Button>
 
@@ -52,19 +54,19 @@ export async function MajlisSidebar() {
           >
             <Link href="/?create=majlis">
               <HeartHandshake className="mr-2 h-4 w-4" />
-              പുതിയ മജ്ലിസ്
+              {t("createMajlis")}
             </Link>
           </Button>
         </nav>
 
         <div className="mt-6 min-h-0 flex-1 overflow-y-auto pr-1">
           <p className="mb-3 px-2 text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
-            Active Majlis
+            {t("activeMajlis")}
           </p>
 
           {activeMajlis.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-emerald-200 bg-white/50 p-4 text-sm leading-6 text-muted-foreground dark:border-emerald-800 dark:bg-slate-950/30">
-              ഇതുവരെ സജീവ മജ്ലിസുകളില്ല. പുതിയ മജ്ലിസ് സൃഷ്ടിക്കൂ.
+              {t("emptyActiveMajlis")}
             </div>
           ) : (
             <div className="space-y-3">
@@ -84,7 +86,7 @@ export async function MajlisSidebar() {
                         {majlis.title}
                       </p>
                       <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
-                        {majlis.purpose}
+                        {majlis.for_whom}
                       </p>
                     </div>
                   </div>
@@ -94,12 +96,12 @@ export async function MajlisSidebar() {
           )}
         </div>
 
-        <div className="mt-4 rounded-3xl bg-emerald-600 p-4 text-white">
+        {/* <div className="mt-4 rounded-3xl bg-emerald-600 p-4 text-white">
           <p className="text-sm font-semibold">Misla Sawab</p>
           <p className="mt-1 text-xs leading-5 text-emerald-50">
-            ഖുർആൻ, ദിക്റ്, അദ്കാർ സംഭാവനകൾ ഒരിടത്ത് ലളിതമായി ക്രമീകരിക്കുക.
+            {t("sidebarDescription")}
           </p>
-        </div>
+        </div> */}
       </Card>
     </aside>
   );

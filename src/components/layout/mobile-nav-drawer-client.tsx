@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, HeartHandshake, Home, Menu, Plus } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { BookOpen, Home, Menu, Plus } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 import type { MajlisListItem } from "@/lib/majlis/list-majlis";
 import { NAV_LINKS } from "@/lib/constants/app";
@@ -26,6 +26,7 @@ export function MobileNavDrawerClient({
   activeMajlis,
 }: MobileNavDrawerClientProps) {
   const app = useTranslations("app");
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
 
   function closeDrawer() {
@@ -86,7 +87,7 @@ export function MobileNavDrawerClient({
             >
               <Link href={link.href}>
                 <Home className="mr-2 h-4 w-4" />
-                {link.labelMl}
+                {locale === "ml" ? link.labelMl : link.labelEn}
               </Link>
             </Button>
           ))}
@@ -107,9 +108,11 @@ export function MobileNavDrawerClient({
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-black text-emerald-950">
-                മജ്ലിസ് ലിസ്റ്റ്
+                {app("majlisList")}
               </p>
-              <p className="text-xs text-muted-foreground">സജീവ മജ്ലിസുകൾ</p>
+              <p className="text-xs text-muted-foreground">
+                {app("activeMajlis")}
+              </p>
             </div>
 
             <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
@@ -120,7 +123,7 @@ export function MobileNavDrawerClient({
           <div className="h-full overflow-y-auto pr-1">
             {activeMajlis.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-emerald-200 bg-emerald-50/60 p-4 text-sm leading-6 text-muted-foreground">
-                ഇതുവരെ സജീവ മജ്ലിസുകളില്ല. പുതിയ മജ്ലിസ് സൃഷ്ടിക്കൂ.
+                {app("emptyActiveMajlis")}
               </div>
             ) : (
               <div className="space-y-3 pb-8">
@@ -141,10 +144,6 @@ export function MobileNavDrawerClient({
                           {majlis.title}
                         </p>
 
-                        <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
-                          {majlis.purpose}
-                        </p>
-
                         <p className="mt-2 line-clamp-1 text-xs font-medium text-emerald-700">
                           {majlis.for_whom}
                         </p>
@@ -157,17 +156,17 @@ export function MobileNavDrawerClient({
           </div>
         </div>
 
-        <div className="shrink-0 border-t border-emerald-100 p-5">
+        {/* <div className="shrink-0 border-t border-emerald-100 p-5">
           <div className="rounded-3xl bg-emerald-600 p-4 text-white">
             <div className="flex items-center gap-2">
               <HeartHandshake className="h-4 w-4" />
               <p className="text-sm font-semibold">Misla Sawab</p>
             </div>
             <p className="mt-1 text-xs leading-5 text-emerald-50">
-              ഖുർആൻ, ദിക്റ്, അദ്കാർ സംഭാവനകൾ ലളിതമായി ക്രമീകരിക്കുക.
+              {app("sidebarDescription")}
             </p>
           </div>
-        </div>
+        </div> */}
       </SheetContent>
     </Sheet>
   );

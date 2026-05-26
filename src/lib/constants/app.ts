@@ -12,7 +12,7 @@ export const NAV_LINKS = [
 export const ACTIVITY_LABELS = {
   khatmul_quran: {
     ml: "ഖത്ത്മുൽ ഖുർആൻ",
-    en: "Khatmul Qur’an",
+    en: "Khatmul Qur'an",
   },
   dhikr: {
     ml: "ദിക്റ് / അദ്കാർ",
@@ -23,7 +23,7 @@ export const ACTIVITY_LABELS = {
     en: "Surah Ya-Sin",
   },
   fathiha: {
-    ml: "സൂറത്തുൽ ഫാത്തിഹ",
-    en: "Surah Al-Fatihah",
+    ml: "Fathiha + Ikhlas + Falaq + Naas",
+    en: "Fathiha + Ikhlas + Falaq + Naas",
   },
 } as const;

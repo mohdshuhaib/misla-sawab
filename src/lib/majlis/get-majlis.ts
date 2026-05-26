@@ -6,7 +6,6 @@ export type PublicMajlis = {
   id: string;
   slug: string;
   title: string;
-  purpose: string;
   for_whom: string;
   description: string | null;
   default_language: "ml" | "en";
@@ -32,7 +31,6 @@ export async function getPublicMajlisBySlug(
       id,
       slug,
       title,
-      purpose,
       for_whom,
       description,
       default_language,

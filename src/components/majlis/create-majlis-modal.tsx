@@ -49,44 +49,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { getAppUrl } from "@/lib/utils/app-url";
 import { BRAND } from "@/lib/constants/brand";
 
-const activityOptions: {
-  value: MajlisActivity;
-  label: string;
-  description: string;
-  icon: typeof BookOpen;
-}[] = [
-    {
-      value: "khatmul_quran",
-      label: "ഖത്ത്മുൽ ഖുർആൻ",
-      description: "30 ജുസ് തിരഞ്ഞെടുത്ത് ഖത്തം പൂർത്തിയാക്കുക",
-      icon: BookOpen,
-    },
-    {
-      value: "dhikr",
-      label: "ദിക്റ് / അദ്കാർ",
-      description: "ദിക്റ് തരം, എണ്ണം, മൊത്തം കണക്ക്",
-      icon: MessageCircleHeart,
-    },
-    {
-      value: "yaseen",
-      label: "സൂറത്ത് യാസീൻ",
-      description: "യാസീൻ പാരായണ എണ്ണം രേഖപ്പെടുത്തുക",
-      icon: HeartHandshake,
-    },
-    {
-      value: "fathiha",
-      label: "സൂറത്തുൽ ഫാത്തിഹ",
-      description: "ഫാത്തിഹ പാരായണ എണ്ണം രേഖപ്പെടുത്തുക",
-      icon: Sparkles,
-    },
-  ];
-
 const formSchema = z.object({
   title: z.string().optional(),
-  purpose: z
-    .string()
-    .min(2, "നിയ്യത്ത് / ഉദ്ദേശ്യം നൽകുക")
-    .max(160, "ഉദ്ദേശ്യം വളരെ നീളമാണ്"),
   forWhom: z
     .string()
     .min(2, "ആർക്കുവേണ്ടിയാണെന്ന് നൽകുക")
@@ -113,7 +77,6 @@ export function CreateMajlisModal() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      purpose: "",
       forWhom: "",
       description: "",
       activities: ["khatmul_quran", "dhikr"],
@@ -124,6 +87,38 @@ export function CreateMajlisModal() {
   const t = useTranslations("create");
   const app = useTranslations("app");
   const activitiesText = useTranslations("activities");
+
+  const activityOptions: {
+  value: MajlisActivity;
+  label: string;
+  description: string;
+  icon: typeof BookOpen;
+}[] = [
+    {
+      value: "khatmul_quran",
+      label: "ഖത്ത്മുൽ ഖുർആൻ",
+      description: "30 ജുസ് തിരഞ്ഞെടുത്ത് ഖത്തം പൂർത്തിയാക്കുക",
+      icon: BookOpen,
+    },
+    {
+      value: "dhikr",
+      label: "ദിക്റ് / അദ്കാർ",
+      description: "ദിക്റ് തരം, എണ്ണം, മൊത്തം കണക്ക്",
+      icon: MessageCircleHeart,
+    },
+    {
+      value: "yaseen",
+      label: "സൂറത്ത് യാസീൻ",
+      description: "യാസീൻ പാരായണ എണ്ണം രേഖപ്പെടുത്തുക",
+      icon: HeartHandshake,
+    },
+    {
+      value: "fathiha",
+      label: "Fathiha + Ikhlas + Falaq + Naas",
+      description: "ഫാതിഹ + ഇഖ്ലാസ് + ഫലഖ് + നാസ് recitation count",
+      icon: Sparkles,
+    },
+  ];
 
   const publicLink = createdMajlis
     ? `${appUrl}/m/${createdMajlis.slug}`
@@ -143,7 +138,6 @@ export function CreateMajlisModal() {
     setCreatedMajlis(null);
     form.reset({
       title: "",
-      purpose: "",
       forWhom: "",
       description: "",
       activities: ["khatmul_quran", "dhikr"],
@@ -159,7 +153,6 @@ export function CreateMajlisModal() {
     try {
       const result = await createMajlis({
         title: values.title,
-        purpose: values.purpose,
         forWhom: values.forWhom,
         description: values.description,
         defaultLanguage: "ml",
@@ -232,31 +225,7 @@ export function CreateMajlisModal() {
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription>
-                          മരണപ്പെട്ട വ്യക്തിയുടെ പേര് അല്ലെങ്കിൽ പ്രത്യേക
-                          ഉദ്ദേശ്യം നൽകാം.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="purpose"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("purpose")}</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder={t("purposePlaceholder")}
-                            className="h-12 rounded-2xl"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          ഈ മജ്ലിസ് ഏത് നിയ്യത്തോടെയാണ് ആരംഭിക്കുന്നത്?
-                        </FormDescription>
+                        
                         <FormMessage />
                       </FormItem>
                     )}
@@ -276,8 +245,7 @@ export function CreateMajlisModal() {
                           />
                         </FormControl>
                         <FormDescription>
-                          ഉദാ: മർഹൂം അബ്ദുള്ള അവർക്കുവേണ്ടിയുള്ള ഖത്ത്മുൽ
-                          ഖുർആൻ മജ്ലിസ്
+                          {t("forWhomExample")}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -310,8 +278,7 @@ export function CreateMajlisModal() {
                         <div>
                           <FormLabel>{t("activitiesLabel")}</FormLabel>
                           <FormDescription>
-                            തിരഞ്ഞെടുക്കുന്ന പ്രവർത്തനങ്ങൾ മാത്രമേ പൊതുജനങ്ങൾക്ക്
-                            കാണിക്കൂ.
+                            {t("activityDescription")}
                           </FormDescription>
                         </div>
 
@@ -457,23 +424,25 @@ function CreatedMajlisResult({
   onCopy,
   onClose,
 }: CreatedMajlisResultProps) {
+
+  const t = useTranslations("create");
+
   return (
     <div className="mt-8 space-y-5">
       <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-800 dark:bg-emerald-950/40">
         <div className="mb-3 flex items-center gap-2 text-emerald-800 dark:text-emerald-100">
           <Check className="h-5 w-5" />
-          <p className="font-bold">മജ്ലിസ് വിജയകരമായി സൃഷ്ടിച്ചു</p>
+          <p className="font-bold">{t("success")}</p>
         </div>
 
         <p className="text-sm leading-6 text-muted-foreground">
-          ഈ public link WhatsApp ഗ്രൂപ്പിൽ share ചെയ്യാം. Manager link
-          സ്വകാര്യമായി മാത്രം സൂക്ഷിക്കുക.
+          {t("LinkDescription")}
         </p>
       </div>
 
       <div className="space-y-3 rounded-3xl border border-emerald-100 bg-white/70 p-5 dark:border-emerald-900 dark:bg-slate-950/40">
         <p className="font-bold text-emerald-950 dark:text-emerald-50">
-          Public Majlis Link
+          {t("publicLink")}
         </p>
 
         <div className="rounded-2xl bg-emerald-50 p-3 text-sm break-all text-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-100">
@@ -486,19 +455,18 @@ function CreatedMajlisResult({
           onClick={() => onCopy(publicLink, "ലിങ്ക് കോപ്പി ചെയ്തു")}
         >
           <Copy className="mr-2 h-4 w-4" />
-          Public Link Copy ചെയ്യുക
+          {t("copyPublicLink")}
         </Button>
       </div>
 
       <div className="space-y-3 rounded-3xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-900 dark:bg-amber-950/30">
         <div className="flex items-center gap-2 text-amber-800 dark:text-amber-100">
           <LockKeyhole className="h-5 w-5" />
-          <p className="font-bold">Private Manager Link</p>
+          <p className="font-bold">{t("managerLink")}</p>
         </div>
 
         <p className="text-sm leading-6 text-amber-900/80 dark:text-amber-100/80">
-          ഈ ലിങ്ക് സ്വകാര്യമായി സൂക്ഷിക്കുക. ഇത് ഉപയോഗിച്ച് മജ്ലിസ് archive
-          ചെയ്യാനും തെറ്റായ contributions remove ചെയ്യാനും കഴിയും.
+          {t("managerLinkDescription")}
         </p>
 
         <div className="rounded-2xl bg-white/70 p-3 text-sm break-all text-amber-950 dark:bg-slate-950/40 dark:text-amber-100">
@@ -512,7 +480,7 @@ function CreatedMajlisResult({
           onClick={() => onCopy(managerLink, "Manager link copied")}
         >
           <Clipboard className="mr-2 h-4 w-4" />
-          Manager Link Copy ചെയ്യുക
+            {t("copyManagerLink")}
         </Button>
       </div>
 
@@ -522,7 +490,7 @@ function CreatedMajlisResult({
           asChild
           className="h-12 flex-1 rounded-full bg-emerald-600 text-white hover:bg-emerald-700"
         >
-          <a href={publicLink}>Public Majlis തുറക്കുക</a>
+          <a href={publicLink}>{t("openPublicMajlis")}</a>
         </Button>
 
         <Button
@@ -531,7 +499,7 @@ function CreatedMajlisResult({
           className="h-12 flex-1 rounded-full"
           onClick={onClose}
         >
-          അടയ്ക്കുക
+          {t("close")}
         </Button>
       </div>
     </div>

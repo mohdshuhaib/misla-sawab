@@ -1,20 +1,15 @@
 "use client";
 
-import { useMemo } from "react";
-import {
-  Copy,
-  LinkIcon,
-  MessageSquareText,
-  Send,
-  Share2,
-  X,
-} from "lucide-react";
+import { useMemo, useState } from "react";
+import { LinkIcon, MessageSquareText, Send, Share2, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import {
   getShareMessage,
   type ShareActivityType,
 } from "@/lib/share/messages";
+import { getAppUrl } from "@/lib/utils/app-url";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +19,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { getAppUrl } from "@/lib/utils/app-url";
 
 type ShareMajlisModalProps = {
   open: boolean;
@@ -33,7 +27,6 @@ type ShareMajlisModalProps = {
   activityLabel: string;
   slug: string;
   forWhom: string;
-  purpose: string;
 };
 
 export function ShareMajlisModal({
@@ -43,8 +36,9 @@ export function ShareMajlisModal({
   activityLabel,
   slug,
   forWhom,
-  purpose,
 }: ShareMajlisModalProps) {
+  const app = useTranslations("app");
+  const share = useTranslations("share");
   const appUrl = useMemo(() => getAppUrl(), []);
 
   const links = useMemo(() => {
@@ -60,45 +54,33 @@ export function ShareMajlisModal({
   }, [appUrl, slug]);
 
   const selectedLink = useMemo(() => {
-    if (activityType === "khatmul_quran") {
-      return links.khatmulQuranLink;
-    }
-
-    if (activityType === "dhikr") {
-      return links.dhikrLink;
-    }
-
-    if (activityType === "yaseen") {
-      return links.yaseenLink;
-    }
-
-    if (activityType === "fathiha") {
-      return links.fathihaLink;
-    }
-
+    if (activityType === "khatmul_quran") return links.khatmulQuranLink;
+    if (activityType === "dhikr") return links.dhikrLink;
+    if (activityType === "yaseen") return links.yaseenLink;
+    if (activityType === "fathiha") return links.fathihaLink;
     return links.majlisLink;
   }, [activityType, links]);
 
   const message = useMemo(() => {
     return getShareMessage(activityType, {
       forWhom,
-      purpose,
       ...links,
     });
-  }, [activityType, forWhom, purpose, links]);
+  }, [activityType, forWhom, links]);
+  const [editableMessage, setEditableMessage] = useState(message);
 
   async function copyLink() {
     await navigator.clipboard.writeText(selectedLink);
-    toast.success("ലിങ്ക് കോപ്പി ചെയ്തു");
+    toast.success(app("linkCopied"));
   }
 
   async function copyMessage() {
-    await navigator.clipboard.writeText(message);
-    toast.success("സന്ദേശം കോപ്പി ചെയ്തു");
+    await navigator.clipboard.writeText(editableMessage);
+    toast.success(app("messageCopied"));
   }
 
   function shareOnWhatsApp() {
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(editableMessage)}`;
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   }
 
@@ -111,11 +93,11 @@ export function ShareMajlisModal({
     try {
       await navigator.share({
         title: activityLabel,
-        text: message,
+        text: editableMessage,
         url: selectedLink,
       });
     } catch {
-      // User cancelled native share. No need to show error.
+      // User cancelled native share.
     }
   }
 
@@ -132,26 +114,26 @@ export function ShareMajlisModal({
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 text-white">
                   <Share2 className="h-5 w-5" />
                 </span>
-                Share {activityLabel}
+                {share("modalTitle", { label: activityLabel })}
               </DialogTitle>
             </DialogHeader>
 
             <div className="mt-6 space-y-5">
               <div>
                 <p className="mb-2 text-sm font-semibold text-emerald-950 dark:text-emerald-50">
-                  Malayalam Message Preview
+                  {share("messagePreview")}
                 </p>
 
                 <Textarea
-                  readOnly
-                  value={message}
-                  className="min-h-72 resize-none rounded-3xl border-emerald-100 bg-emerald-50/70 leading-7 text-emerald-950 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-50"
+                  value={editableMessage}
+                  onChange={(event) => setEditableMessage(event.target.value)}
+                  className="min-h-72 resize-y rounded-3xl border-emerald-100 bg-emerald-50/70 leading-7 text-emerald-950 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-50"
                 />
               </div>
 
               <div>
                 <p className="mb-2 text-sm font-semibold text-emerald-950 dark:text-emerald-50">
-                  Direct Link
+                  {share("directLink")}
                 </p>
 
                 <div className="rounded-2xl bg-white/80 p-3 text-sm break-all text-emerald-900 ring-1 ring-emerald-100 dark:bg-slate-950/50 dark:text-emerald-100 dark:ring-emerald-900">
@@ -162,26 +144,26 @@ export function ShareMajlisModal({
               <div className="grid gap-3 sm:grid-cols-2">
                 <Button
                   type="button"
-                  className="h-12 rounded-full bg-emerald-600 text-white hover:bg-emerald-700"
+                  className="h-auto min-h-12 rounded-2xl bg-emerald-600 px-4 py-3 whitespace-normal text-white hover:bg-emerald-700"
                   onClick={copyMessage}
                 >
                   <MessageSquareText className="mr-2 h-4 w-4" />
-                  Copy Message
+                  <span className="min-w-0 break-words">{share("copyMessage")}</span>
                 </Button>
 
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-12 rounded-full"
+                  className="h-auto min-h-12 rounded-2xl px-4 py-3 whitespace-normal"
                   onClick={copyLink}
                 >
                   <LinkIcon className="mr-2 h-4 w-4" />
-                  Copy Link
+                  <span className="min-w-0 break-words">{share("copyLink")}</span>
                 </Button>
 
                 <Button
                   type="button"
-                  className="h-12 rounded-full bg-green-600 text-white hover:bg-green-700"
+                  className="h-auto min-h-12 rounded-2xl bg-green-600 px-4 py-3 whitespace-normal text-white hover:bg-green-700"
                   onClick={shareOnWhatsApp}
                 >
                   <Send className="mr-2 h-4 w-4" />
@@ -191,22 +173,22 @@ export function ShareMajlisModal({
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-12 rounded-full"
+                  className="h-auto min-h-12 rounded-2xl px-4 py-3 whitespace-normal"
                   onClick={nativeShare}
                 >
                   <Share2 className="mr-2 h-4 w-4" />
-                  Mobile Share
+                  <span className="min-w-0 break-words">{share("mobileShare")}</span>
                 </Button>
               </div>
 
               <Button
                 type="button"
                 variant="ghost"
-                className="h-12 w-full rounded-full"
+                className="h-auto min-h-12 w-full rounded-2xl px-4 py-3 whitespace-normal"
                 onClick={() => onOpenChange(false)}
               >
                 <X className="mr-2 h-4 w-4" />
-                അടയ്ക്കുക
+                <span className="min-w-0 break-words">{share("close")}</span>
               </Button>
             </div>
           </div>

@@ -1,8 +1,7 @@
 import { getRequestConfig } from "next-intl/server";
 import { cookies } from "next/headers";
 
-const locales = ["ml", "en"] as const;
-type Locale = (typeof locales)[number];
+type Locale = "ml" | "en";
 
 function isValidLocale(locale: string | undefined): locale is Locale {
   return locale === "ml" || locale === "en";

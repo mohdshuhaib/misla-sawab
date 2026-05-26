@@ -272,8 +272,8 @@ export async function getMajlisStats(roomId: string): Promise<MajlisStatsState> 
       type: item.activity_type,
       label:
         item.activity_type === "fathiha"
-          ? "സൂറത്തുൽ ഫാത്തിഹ"
-          : "സൂറത്ത് യാസീൻ",
+          ? "Fathiha + Ikhlas + Falaq + Naas"
+          : "Surah Ya-Sin",
       contributor_name:
         contributorNameMap.get(item.contributor_id) || "Unknown",
       count: item.count,

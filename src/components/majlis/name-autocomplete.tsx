@@ -18,6 +18,7 @@ type NameAutocompleteProps = {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  allowNew?: boolean;
 };
 
 function normalizeName(value: string) {
@@ -27,6 +28,7 @@ function normalizeName(value: string) {
 export function NameAutocomplete({
   value,
   onChange,
+  allowNew = true,
   placeholder = "നിങ്ങളുടെ പേര് നൽകുക",
 }: NameAutocompleteProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -109,7 +111,7 @@ export function NameAutocomplete({
             </div>
           ) : null}
 
-          {!isLoading && suggestions.length === 0 ? (
+          {false && !isLoading && suggestions.length === 0 ? (
             <button
               type="button"
               className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left hover:bg-emerald-50 dark:hover:bg-emerald-950"
@@ -162,7 +164,7 @@ export function NameAutocomplete({
             );
           })}
 
-          {value.length >= 2 && !exactMatch ? (
+          {allowNew && value.length >= 2 && !exactMatch ? (
             <button
               type="button"
               className="mt-1 flex w-full items-center gap-3 rounded-2xl border border-dashed border-emerald-200 px-4 py-3 text-left hover:bg-emerald-50 dark:border-emerald-800 dark:hover:bg-emerald-950"
@@ -174,7 +176,7 @@ export function NameAutocomplete({
 
               <span>
                 <span className="block text-sm font-semibold text-emerald-950 dark:text-emerald-50">
-                  പുതിയ contributor ആയി ഉപയോഗിക്കുക
+                  Add as new contributor
                 </span>
                 <span className="block text-xs text-muted-foreground">
                   {value}

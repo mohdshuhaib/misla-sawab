@@ -27,10 +27,10 @@ export async function generateMetadata({
 
   return {
     title: `${titleMl} | Misla Sawab`,
-    description: majlis.purpose,
+    description: majlis.description || majlis.title,
     openGraph: {
       title: titleMl,
-      description: `${majlis.purpose} | Misla Sawab`,
+      description: `${majlis.description || majlis.title} | Misla Sawab`,
       siteName: "Misla Sawab",
       type: "website",
     },
@@ -50,8 +50,7 @@ export default async function StatsPage({ params }: PageProps) {
       roomId={majlis.id}
       slug={majlis.slug}
       title={majlis.title}
-      forWhom={majlis.for_whom}
-      purpose={majlis.purpose}
+      forWhom={majlis.for_whom}
     />
   );
 }

@@ -4,12 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
-  BarChart3,
   CheckCircle2,
   Heart,
   Loader2,
   MessageCircleHeart,
-  Plus,
   RefreshCw,
   Sparkles,
   UserRound,
@@ -24,7 +22,6 @@ import {
 import { useMajlisRealtime } from "@/hooks/use-majlis-realtime";
 import { cn } from "@/lib/utils";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -35,16 +32,11 @@ type DhikrClientProps = {
   slug: string;
   title: string;
   forWhom: string;
-  purpose: string;
 };
 
 const predefinedDhikr = [
-  "Subhanallah",
-  "Alhamdulillah",
-  "Allahu Akbar",
-  "La ilaha illa Allah",
-  "Astaghfirullah",
-  "Allahumma salli ala Muhammad",
+  "La ilaha illallah",
+  "Allahumma salli ala Muhammed ya Rabbi salli alaihiva sallim",
 ];
 
 const quickCounts = [100, 300, 500, 1000, 5000];
@@ -54,14 +46,11 @@ export function DhikrClient({
   slug,
   title,
   forWhom,
-  purpose,
 }: DhikrClientProps) {
   const [dhikrState, setDhikrState] = useState<DhikrState | null>(null);
   const [displayName, setDisplayName] = useState("");
   const [selectedDhikr, setSelectedDhikr] = useState(predefinedDhikr[0]);
-  const [customDhikr, setCustomDhikr] = useState("");
   const [count, setCount] = useState("100");
-  const [isCustom, setIsCustom] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -89,12 +78,8 @@ export function DhikrClient({
   });
 
   const finalDhikrType = useMemo(() => {
-    if (isCustom) {
-      return customDhikr.trim();
-    }
-
     return selectedDhikr.trim();
-  }, [isCustom, customDhikr, selectedDhikr]);
+  }, [selectedDhikr]);
 
   async function submitDhikr() {
     const numericCount = Number.parseInt(count, 10);
@@ -126,8 +111,6 @@ export function DhikrClient({
 
       toast.success("ദിക്റ് സംഭാവന രേഖപ്പെടുത്തി");
       setCount("100");
-      setCustomDhikr("");
-
       await loadDhikr();
     } catch (error) {
       const message =
@@ -179,14 +162,6 @@ export function DhikrClient({
                   </p>
                 </div>
 
-                <div className="rounded-3xl border border-emerald-100 bg-white/60 p-4 dark:border-emerald-900 dark:bg-slate-950/30">
-                  <p className="text-sm text-muted-foreground">
-                    നിയ്യത്ത് / ഉദ്ദേശ്യം
-                  </p>
-                  <p className="mt-1 text-lg font-bold text-emerald-950 dark:text-emerald-50">
-                    {purpose}
-                  </p>
-                </div>
               </div>
 
               <p className="mt-5 max-w-3xl text-base leading-8 text-muted-foreground">
@@ -255,21 +230,18 @@ export function DhikrClient({
 
             <div>
               <label className="mb-3 block text-sm font-semibold text-emerald-950 dark:text-emerald-50">
-                ദിക്റ് / അദ്കാർ തരം
+                Dhikr / Adhkar type
               </label>
 
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {predefinedDhikr.map((dhikr) => (
                   <button
                     key={dhikr}
                     type="button"
-                    onClick={() => {
-                      setIsCustom(false);
-                      setSelectedDhikr(dhikr);
-                    }}
+                    onClick={() => setSelectedDhikr(dhikr)}
                     className={cn(
-                      "min-h-14 rounded-2xl border px-4 py-3 text-left text-sm font-semibold transition",
-                      !isCustom && selectedDhikr === dhikr
+                      "min-h-14 break-words rounded-2xl border px-4 py-3 text-left text-sm font-semibold whitespace-normal transition",
+                      selectedDhikr === dhikr
                         ? "border-emerald-600 bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
                         : "border-emerald-100 bg-white/80 text-emerald-950 hover:bg-emerald-50 dark:border-emerald-900 dark:bg-slate-950/40 dark:text-emerald-50 dark:hover:bg-emerald-950/40"
                     )}
@@ -277,30 +249,7 @@ export function DhikrClient({
                     {dhikr}
                   </button>
                 ))}
-
-                <button
-                  type="button"
-                  onClick={() => setIsCustom(true)}
-                  className={cn(
-                    "min-h-14 rounded-2xl border px-4 py-3 text-left text-sm font-semibold transition",
-                    isCustom
-                      ? "border-emerald-600 bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
-                      : "border-dashed border-emerald-200 bg-white/80 text-emerald-950 hover:bg-emerald-50 dark:border-emerald-800 dark:bg-slate-950/40 dark:text-emerald-50 dark:hover:bg-emerald-950/40"
-                  )}
-                >
-                  <Plus className="mr-2 inline h-4 w-4" />
-                  Custom Dhikr
-                </button>
               </div>
-
-              {isCustom ? (
-                <Input
-                  value={customDhikr}
-                  onChange={(event) => setCustomDhikr(event.target.value)}
-                  placeholder="ഉദാ: Hasbunallahu wa ni'mal wakeel"
-                  className="mt-3 h-13 rounded-2xl border-emerald-200 bg-white/80 text-base dark:border-emerald-900 dark:bg-slate-950/50"
-                />
-              ) : null}
             </div>
 
             <div>
@@ -366,11 +315,6 @@ export function DhikrClient({
           </CardContent>
         </Card>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <RecentDhikrList state={dhikrState} />
-          <ContributorStatsList state={dhikrState} />
-        </div>
-
         <DhikrTypeStatsList state={dhikrState} />
 
         <div className="flex justify-end">
@@ -407,113 +351,6 @@ function StatCard({ icon: Icon, label, value }: StatCardProps) {
         <p className="mt-1 text-3xl font-black text-emerald-950 dark:text-emerald-50">
           {value.toLocaleString("en-IN")}
         </p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function RecentDhikrList({ state }: { state: DhikrState | null }) {
-  const recent = state?.recentContributions || [];
-
-  return (
-    <Card className="glass-card rounded-[2rem] border-emerald-100">
-      <CardContent className="p-5">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <h2 className="text-xl font-black text-emerald-950 dark:text-emerald-50">
-              പുതിയ ദിക്റ് സംഭാവനകൾ
-            </h2>
-            <p className="text-sm text-muted-foreground">Recent activity</p>
-          </div>
-
-          <Badge variant="outline" className="rounded-full">
-            {recent.length}
-          </Badge>
-        </div>
-
-        {recent.length === 0 ? (
-          <p className="rounded-3xl bg-emerald-50 p-4 text-sm text-muted-foreground dark:bg-emerald-950/40">
-            ഇതുവരെ ദിക്റ് സംഭാവനകളില്ല.
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {recent.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-3xl border border-emerald-100 bg-white/70 p-4 dark:border-emerald-900 dark:bg-slate-950/40"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="font-bold text-emerald-950 dark:text-emerald-50">
-                      {item.contributor_name}
-                    </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {item.dhikr_type}
-                    </p>
-                  </div>
-
-                  <Badge className="rounded-full bg-emerald-600 text-white">
-                    {item.count.toLocaleString("en-IN")}
-                  </Badge>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-function ContributorStatsList({ state }: { state: DhikrState | null }) {
-  const contributors = state?.contributorStats.slice(0, 10) || [];
-
-  return (
-    <Card className="glass-card rounded-[2rem] border-emerald-100">
-      <CardContent className="p-5">
-        <div className="mb-4 flex items-center gap-3">
-          <BarChart3 className="h-5 w-5 text-emerald-600" />
-          <div>
-            <h2 className="text-xl font-black text-emerald-950 dark:text-emerald-50">
-              Contributor-wise കണക്ക്
-            </h2>
-            <p className="text-sm text-muted-foreground">Top contributors</p>
-          </div>
-        </div>
-
-        {contributors.length === 0 ? (
-          <p className="rounded-3xl bg-emerald-50 p-4 text-sm text-muted-foreground dark:bg-emerald-950/40">
-            Contributor stats ഇതുവരെ ലഭ്യമല്ല.
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {contributors.map((item, index) => (
-              <div
-                key={item.contributor_id}
-                className="flex items-center justify-between gap-3 rounded-3xl border border-emerald-100 bg-white/70 p-4 dark:border-emerald-900 dark:bg-slate-950/40"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-100 font-bold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100">
-                    {index + 1}
-                  </div>
-
-                  <div>
-                    <p className="font-bold text-emerald-950 dark:text-emerald-50">
-                      {item.contributor_name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {item.contribution_count} contributions
-                    </p>
-                  </div>
-                </div>
-
-                <Badge className="rounded-full bg-emerald-600 text-white">
-                  {item.total_count.toLocaleString("en-IN")}
-                </Badge>
-              </div>
-            ))}
-          </div>
-        )}
       </CardContent>
     </Card>
   );

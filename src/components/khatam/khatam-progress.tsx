@@ -1,4 +1,7 @@
+"use client";
+
 import { CheckCircle2, CircleDashed } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import type { KhatamState } from "@/lib/majlis/khatam";
 
@@ -10,6 +13,7 @@ type KhatamProgressProps = {
 };
 
 export function KhatamProgress({ khatam }: KhatamProgressProps) {
+  const t = useTranslations("khatam");
   const reservedCount = khatam.contributions.length;
   const completedCount = khatam.contributions.filter(
     (item) => item.status === "completed"
@@ -32,12 +36,15 @@ export function KhatamProgress({ khatam }: KhatamProgressProps) {
             )}
 
             <h2 className="text-xl font-black text-emerald-950">
-              ഖത്തം {khatam.khatam_number}
+              {t("khatamNumber", { number: khatam.khatam_number })}
             </h2>
           </div>
 
           <p className="mt-1 text-sm text-muted-foreground">
-            Reserved: {reservedCount} / 30 · Completed: {completedCount} / 30
+            {t("reservedSummary", {
+              reserved: reservedCount,
+              completed: completedCount,
+            })}
           </p>
         </div>
 
@@ -49,14 +56,16 @@ export function KhatamProgress({ khatam }: KhatamProgressProps) {
               : "rounded-full border-emerald-200 px-4 py-2 text-emerald-800"
           }
         >
-          {completed ? "പൂർത്തിയായി" : `${completedPercentage}% completed`}
+          {completed
+            ? t("completed")
+            : t("completedPercent", { percent: completedPercentage })}
         </Badge>
       </div>
 
       <div className="space-y-4">
         <div>
           <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
-            <span>Reserved / Selected</span>
+            <span>{t("reservedSelected")}</span>
             <span>{reservedPercentage}%</span>
           </div>
           <Progress value={reservedPercentage} className="h-3 rounded-full" />
@@ -64,24 +73,20 @@ export function KhatamProgress({ khatam }: KhatamProgressProps) {
 
         <div>
           <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
-            <span>Actually Completed</span>
+            <span>{t("actuallyCompleted")}</span>
             <span>{completedPercentage}%</span>
           </div>
           <Progress value={completedPercentage} className="h-3 rounded-full" />
         </div>
       </div>
 
-      {completed ? (
-        <p className="mt-4 rounded-2xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-800">
-          അൽഹംദുലില്ലാഹ്. ഈ ഖത്തം പാരായണം പൂർത്തിയായി. പുതിയ ഖത്തം സൃഷ്ടിച്ച്
-          തുടർന്നും പങ്കെടുക്കാം.
-        </p>
-      ) : (
-        <p className="mt-4 rounded-2xl bg-amber-50 p-4 text-sm leading-6 text-amber-800">
-          ശ്രദ്ധിക്കുക: ജുസ് തിരഞ്ഞെടുക്കുന്നത് reserve മാത്രമാണ്. പാരായണം
-          പൂർത്തിയാക്കിയ ശേഷം completed ആയി mark ചെയ്യണം.
-        </p>
-      )}
+      <p
+        className={`mt-4 rounded-2xl p-4 text-sm leading-6 ${
+          completed ? "bg-emerald-50 text-emerald-800" : "bg-amber-50 text-amber-800"
+        }`}
+      >
+        {completed ? t("completedMessage") : t("pendingMessage")}
+      </p>
     </div>
   );
 }

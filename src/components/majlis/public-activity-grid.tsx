@@ -7,11 +7,12 @@ import {
   MessageCircleHeart,
   Sparkles,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 import type { ActivityType } from "@/lib/majlis/get-majlis";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 type PublicActivityGridProps = {
   slug: string;
@@ -20,45 +21,46 @@ type PublicActivityGridProps = {
 
 const activityCards: {
   type: ActivityType;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   href: (slug: string) => string;
   icon: typeof BookOpen;
 }[] = [
   {
     type: "khatmul_quran",
-    title: "ഖത്ത്മുൽ ഖുർആൻ",
-    description: "നിങ്ങൾക്ക് പാരായണം ചെയ്യാൻ കഴിയുന്ന ജുസ് തിരഞ്ഞെടുക്കുക.",
+    titleKey: "khatmulQuran",
+    descriptionKey: "khatmulQuranCardDescription",
     href: (slug) => `/m/${slug}/khatmul-quran`,
     icon: BookOpen,
   },
   {
     type: "dhikr",
-    title: "ദിക്റ് / അദ്കാർ",
-    description: "നിങ്ങൾ ചൊല്ലിയ ദിക്റും എണ്ണവും രേഖപ്പെടുത്തുക.",
+    titleKey: "dhikr",
+    descriptionKey: "dhikrCardDescription",
     href: (slug) => `/m/${slug}/dhikr`,
     icon: MessageCircleHeart,
   },
   {
     type: "yaseen",
-    title: "സൂറത്ത് യാസീൻ",
-    description: "സൂറത്ത് യാസീൻ പാരായണ എണ്ണം രേഖപ്പെടുത്തുക.",
+    titleKey: "yaseen",
+    descriptionKey: "yaseenCardDescription",
     href: (slug) => `/m/${slug}/surah-yaseen`,
     icon: HeartHandshake,
   },
   {
     type: "fathiha",
-    title: "സൂറത്തുൽ ഫാത്തിഹ",
-    description: "ഫാത്തിഹ പാരായണ എണ്ണം രേഖപ്പെടുത്തുക.",
+    titleKey: "fathiha",
+    descriptionKey: "fathihaCardDescription",
     href: (slug) => `/m/${slug}/surah-fathiha`,
     icon: Sparkles,
   },
 ];
 
-export function PublicActivityGrid({
+export async function PublicActivityGrid({
   slug,
   enabledActivities,
 }: PublicActivityGridProps) {
+  const t = await getTranslations("activities");
   const visibleCards = activityCards.filter((card) =>
     enabledActivities.includes(card.type)
   );
@@ -83,18 +85,18 @@ export function PublicActivityGrid({
               </div>
 
               <h2 className="text-xl font-black text-emerald-950 dark:text-emerald-50">
-                {activity.title}
+                {t(activity.titleKey)}
               </h2>
 
               <p className="mt-2 min-h-12 text-sm leading-6 text-muted-foreground">
-                {activity.description}
+                {t(activity.descriptionKey)}
               </p>
 
               <Button
                 asChild
                 className="mt-5 h-12 w-full rounded-full bg-emerald-600 text-white hover:bg-emerald-700"
               >
-                <Link href={activity.href(slug)}>ഇതിൽ പങ്കെടുക്കുക</Link>
+                <Link href={activity.href(slug)}>{t("participate")}</Link>
               </Button>
             </CardContent>
           </Card>
@@ -108,11 +110,11 @@ export function PublicActivityGrid({
           </div>
 
           <h2 className="text-xl font-black text-emerald-950 dark:text-emerald-50">
-            മജ്ലിസ് കണക്കുകൾ
+            {t("majlisStats")}
           </h2>
 
           <p className="mt-2 min-h-12 text-sm leading-6 text-muted-foreground">
-            മൊത്തം സംഭാവകർ, ഖത്തം പുരോഗതി, ദിക്റ് എണ്ണം, പുതിയ പ്രവർത്തനങ്ങൾ കാണുക.
+            {t("majlisStatsDescription")}
           </p>
 
           <Button
@@ -120,7 +122,7 @@ export function PublicActivityGrid({
             variant="outline"
             className="mt-5 h-12 w-full rounded-full"
           >
-            <Link href={`/m/${slug}/stats`}>Stats കാണുക</Link>
+            <Link href={`/m/${slug}/stats`}>{t("viewStats")}</Link>
           </Button>
         </CardContent>
       </Card>

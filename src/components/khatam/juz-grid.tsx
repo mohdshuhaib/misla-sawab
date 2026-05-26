@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Clock3, Lock } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import type { JuzContribution } from "@/lib/majlis/khatam";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ export function JuzGrid({
   disabled = false,
   onToggleJuz,
 }: JuzGridProps) {
+  const t = useTranslations("khatam");
   const contributionMap = new Map(
     contributions.map((item) => [item.juz_number, item])
   );
@@ -42,17 +44,13 @@ export function JuzGrid({
             className={cn(
               "group min-h-28 rounded-3xl border p-3 text-left transition",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2",
-
               !isReserved &&
                 !isSelectedNow &&
                 "border-emerald-100 bg-white/80 hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-50",
-
               isSelectedNow &&
                 "border-emerald-600 bg-emerald-600 text-white shadow-lg shadow-emerald-600/20",
-
               isPending &&
                 "cursor-not-allowed border-amber-200 bg-amber-50 text-amber-950",
-
               isCompleted &&
                 "cursor-not-allowed border-emerald-200 bg-emerald-50 text-emerald-950"
             )}
@@ -75,7 +73,7 @@ export function JuzGrid({
               {isCompleted ? (
                 <>
                   <p className="line-clamp-1 text-xs font-semibold text-emerald-800">
-                    Completed
+                    {t("completed")}
                   </p>
                   <p className="line-clamp-2 text-xs leading-5">
                     {contribution?.contributor_name}
@@ -84,7 +82,7 @@ export function JuzGrid({
               ) : isPending ? (
                 <>
                   <p className="line-clamp-1 text-xs font-semibold text-amber-800">
-                    Reserved / Pending
+                    {t("reservedPending")}
                   </p>
                   <p className="line-clamp-2 text-xs leading-5">
                     {contribution?.contributor_name}
@@ -92,11 +90,11 @@ export function JuzGrid({
                 </>
               ) : isSelectedNow ? (
                 <p className="text-xs leading-5 text-white/90">
-                  ഇപ്പോൾ select ചെയ്തു
+                  {t("selectedNow")}
                 </p>
               ) : (
                 <p className="text-xs leading-5 text-muted-foreground">
-                  ലഭ്യമാണ്
+                  {t("available")}
                 </p>
               )}
             </div>

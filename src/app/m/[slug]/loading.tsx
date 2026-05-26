@@ -8,9 +8,7 @@ export default function MajlisLoadingPage() {
       <Card className="glass-card rounded-[2rem]">
         <CardContent className="p-8 text-center">
           <Loader2 className="mx-auto h-8 w-8 animate-spin text-emerald-600" />
-          <p className="mt-3 text-muted-foreground">
-            മജ്ലിസ് ലോഡ് ചെയ്യുന്നു...
-          </p>
+          <p className="mt-3 text-muted-foreground">Loading Majlis...</p>
         </CardContent>
       </Card>
     </main>

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Misla Sawab is a Malayalam-first Islamic community web app for managing Khatmul Qur’an, Surah recitations, Dhikr / Adhkar, and good-deed contributions for a deceased person or a specific Islamic purpose.",
+    "Misla Sawab is a Malayalam-first Islamic community web app for managing Khatmul Qur'an, Surah recitations, Dhikr / Adhkar, and good-deed contributions.",
 
   applicationName: "Misla Sawab",
 
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Misla Sawab | നന്മയുടെ മജ്ലിസ്",
     description:
-      "Create and share Malayalam-first Khatmul Qur’an, Dhikr / Adhkar, Surah Ya-Sin, and Surah Al-Fatihah contribution Majlis links.",
+      "Create and share Malayalam-first Khatmul Qur'an, Dhikr / Adhkar, Surah Ya-Sin, and Fathiha + Ikhlas + Falaq + Naas contribution Majlis links.",
     url: "https://misla-sawab.vercel.app/login",
     siteName: "Misla Sawab",
     images: [
@@ -75,18 +75,18 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Misla Sawab | നന്മയുടെ മജ്ലിസ്",
     description:
-      "Malayalam-first Islamic community app for Khatmul Qur’an, Dhikr, Surah recitations, and good-deed contributions.",
+      "Malayalam-first Islamic community app for Khatmul Qur'an, Dhikr, Surah recitations, and good-deed contributions.",
     images: ["/web-app-manifest-512x512.png"],
   },
 
   keywords: [
     "Misla Sawab",
     "Khatmul Quran",
-    "Khatmul Qur’an",
+    "Khatmul Qur'an",
     "Dhikr",
     "Adhkar",
     "Surah Yaseen",
-    "Surah Fathiha",
+    "Fathiha Ikhlas Falaq Naas",
     "Malayalam Islamic app",
     "Majlis",
     "Quran recitation",
@@ -106,12 +106,12 @@ export default async function RootLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
-            <div className="min-h-screen islamic-pattern">
-              <Navbar />
-              {children}
-            </div>
+          <div className="min-h-screen islamic-pattern">
+            <Navbar />
+            {children}
+          </div>
 
-            <Toaster richColors position="top-center" />
+          <Toaster richColors position="top-center" />
         </NextIntlClientProvider>
       </body>
     </html>

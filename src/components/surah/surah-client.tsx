@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
-  BarChart3,
   BookHeart,
   CheckCircle2,
   HeartHandshake,
@@ -23,7 +22,6 @@ import {
 } from "@/lib/majlis/surah";
 import { useMajlisRealtime } from "@/hooks/use-majlis-realtime";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -34,7 +32,6 @@ type SurahClientProps = {
   slug: string;
   title: string;
   forWhom: string;
-  purpose: string;
   activityType: SurahActivityType;
 };
 
@@ -52,13 +49,13 @@ const surahConfig = {
     icon: BookHeart,
   },
   fathiha: {
-    pageBadge: "സൂറത്തുൽ ഫാത്തിഹ പാരായണ മജ്ലിസ്",
-    heading: "സൂറത്തുൽ ഫാത്തിഹ",
+    pageBadge: "Fathiha + Ikhlas + Falaq + Naas Recitation Majlis",
+    heading: "Fathiha + Ikhlas + Falaq + Naas",
     description:
-      "നിങ്ങൾ പാരായണം ചെയ്ത ഫാത്തിഹ എണ്ണം നിങ്ങളുടെ പേരിൽ രേഖപ്പെടുത്തുക.",
-    totalLabel: "മൊത്തം ഫാത്തിഹ പാരായണം",
-    submitSuccess: "ഫാത്തിഹ പാരായണം രേഖപ്പെടുത്തി",
-    placeholder: "ഉദാ: 11",
+      "Record the number of Fathiha + Ikhlas + Falaq + Naas recitations under your name.",
+    totalLabel: "Total Fathiha + Ikhlas + Falaq + Naas Recitations",
+    submitSuccess: "Fathiha + Ikhlas + Falaq + Naas recitation recorded",
+    placeholder: "Example: 11",
     icon: Sparkles,
   },
 } as const;
@@ -68,7 +65,6 @@ export function SurahClient({
   slug,
   title,
   forWhom,
-  purpose,
   activityType,
 }: SurahClientProps) {
   const config = surahConfig[activityType];
@@ -189,14 +185,6 @@ export function SurahClient({
                   </p>
                 </div>
 
-                <div className="rounded-3xl border border-emerald-100 bg-white/60 p-4 dark:border-emerald-900 dark:bg-slate-950/30">
-                  <p className="text-sm text-muted-foreground">
-                    നിയ്യത്ത് / ഉദ്ദേശ്യം
-                  </p>
-                  <p className="mt-1 text-lg font-bold text-emerald-950 dark:text-emerald-50">
-                    {purpose}
-                  </p>
-                </div>
               </div>
 
               <p className="mt-5 max-w-3xl text-base leading-8 text-muted-foreground">
@@ -324,11 +312,6 @@ export function SurahClient({
           </CardContent>
         </Card>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <RecentSurahList state={surahState} heading={config.heading} />
-          <SurahContributorStatsList state={surahState} />
-        </div>
-
         <div className="flex justify-end">
           <Button
             type="button"
@@ -368,115 +351,3 @@ function StatCard({ icon: Icon, label, value }: StatCardProps) {
   );
 }
 
-function RecentSurahList({
-  state,
-  heading,
-}: {
-  state: SurahState | null;
-  heading: string;
-}) {
-  const recent = state?.recentContributions || [];
-
-  return (
-    <Card className="glass-card rounded-[2rem] border-emerald-100">
-      <CardContent className="p-5">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <h2 className="text-xl font-black text-emerald-950 dark:text-emerald-50">
-              പുതിയ പാരായണങ്ങൾ
-            </h2>
-            <p className="text-sm text-muted-foreground">{heading} recent activity</p>
-          </div>
-
-          <Badge variant="outline" className="rounded-full">
-            {recent.length}
-          </Badge>
-        </div>
-
-        {recent.length === 0 ? (
-          <p className="rounded-3xl bg-emerald-50 p-4 text-sm text-muted-foreground dark:bg-emerald-950/40">
-            ഇതുവരെ പാരായണ സംഭാവനകളില്ല.
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {recent.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-3xl border border-emerald-100 bg-white/70 p-4 dark:border-emerald-900 dark:bg-slate-950/40"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="font-bold text-emerald-950 dark:text-emerald-50">
-                      {item.contributor_name}
-                    </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {heading}
-                    </p>
-                  </div>
-
-                  <Badge className="rounded-full bg-emerald-600 text-white">
-                    {item.count.toLocaleString("en-IN")}
-                  </Badge>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-function SurahContributorStatsList({ state }: { state: SurahState | null }) {
-  const contributors = state?.contributorStats.slice(0, 10) || [];
-
-  return (
-    <Card className="glass-card rounded-[2rem] border-emerald-100">
-      <CardContent className="p-5">
-        <div className="mb-4 flex items-center gap-3">
-          <BarChart3 className="h-5 w-5 text-emerald-600" />
-          <div>
-            <h2 className="text-xl font-black text-emerald-950 dark:text-emerald-50">
-              Contributor-wise കണക്ക്
-            </h2>
-            <p className="text-sm text-muted-foreground">Top contributors</p>
-          </div>
-        </div>
-
-        {contributors.length === 0 ? (
-          <p className="rounded-3xl bg-emerald-50 p-4 text-sm text-muted-foreground dark:bg-emerald-950/40">
-            Contributor stats ഇതുവരെ ലഭ്യമല്ല.
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {contributors.map((item, index) => (
-              <div
-                key={item.contributor_id}
-                className="flex items-center justify-between gap-3 rounded-3xl border border-emerald-100 bg-white/70 p-4 dark:border-emerald-900 dark:bg-slate-950/40"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-100 font-bold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100">
-                    {index + 1}
-                  </div>
-
-                  <div>
-                    <p className="font-bold text-emerald-950 dark:text-emerald-50">
-                      {item.contributor_name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {item.contribution_count} contributions
-                    </p>
-                  </div>
-                </div>
-
-                <Badge className="rounded-full bg-emerald-600 text-white">
-                  {item.total_count.toLocaleString("en-IN")}
-                </Badge>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}

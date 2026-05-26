@@ -74,8 +74,8 @@ const activityOptions: {
     },
     {
       value: "fathiha",
-      label: "സൂറത്തുൽ ഫാത്തിഹ",
-      description: "Surah Al-Fatihah recitation count",
+      label: "Fathiha + Ikhlas + Falaq + Naas",
+      description: "Fathiha + Ikhlas + Falaq + Naas recitation count",
       icon: Sparkles,
     },
   ];
@@ -90,7 +90,6 @@ export function ManagerClient({ slug }: ManagerClientProps) {
   const [isArchiving, setIsArchiving] = useState(false);
 
   const [title, setTitle] = useState("");
-  const [purpose, setPurpose] = useState("");
   const [forWhom, setForWhom] = useState("");
   const [description, setDescription] = useState("");
   const [activities, setActivities] = useState<MajlisActivity[]>([]);
@@ -118,7 +117,6 @@ export function ManagerClient({ slug }: ManagerClientProps) {
       setState(data);
 
       setTitle(data.room.title);
-      setPurpose(data.room.purpose);
       setForWhom(data.room.for_whom);
       setDescription(data.room.description || "");
       setActivities(
@@ -174,11 +172,6 @@ export function ManagerClient({ slug }: ManagerClientProps) {
       return;
     }
 
-    if (purpose.trim().length < 2) {
-      toast.error("നിയ്യത്ത് / ഉദ്ദേശ്യം നൽകുക");
-      return;
-    }
-
     if (forWhom.trim().length < 2) {
       toast.error("ആർക്കുവേണ്ടിയാണെന്ന് നൽകുക");
       return;
@@ -196,7 +189,6 @@ export function ManagerClient({ slug }: ManagerClientProps) {
         roomId: state.room.id,
         managerToken,
         title,
-        purpose,
         forWhom,
         description,
         defaultLanguage: state.room.default_language,
@@ -359,7 +351,6 @@ export function ManagerClient({ slug }: ManagerClientProps) {
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 <InfoBox label="Status" value={state.room.status} />
                 <InfoBox label="ആർക്കുവേണ്ടി" value={state.room.for_whom} />
-                <InfoBox label="നിയ്യത്ത്" value={state.room.purpose} />
               </div>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -448,16 +439,6 @@ export function ManagerClient({ slug }: ManagerClientProps) {
                     />
                   </div>
 
-                  <div>
-                    <label className="mb-2 block text-sm font-semibold">
-                      Purpose / Niyyah
-                    </label>
-                    <Input
-                      value={purpose}
-                      onChange={(event) => setPurpose(event.target.value)}
-                      className="h-12 rounded-2xl"
-                    />
-                  </div>
 
                   <div className="sm:col-span-2">
                     <label className="mb-2 block text-sm font-semibold">
@@ -644,7 +625,7 @@ function ManagerOverview({ state }: { state: ManagerMajlisState }) {
         icon={MessageCircleHeart}
       />
       <ManagerStatCard
-        label="Total Fathiha + Ya-Sin"
+        label="Total Fathiha Set + Ya-Sin"
         value={totalFathiha + totalYaseen}
         icon={Sparkles}
       />
@@ -781,10 +762,10 @@ function SimpleRecitationManagerList({
             key={item.id}
             title={item.contributor_name}
             subtitle={`${item.activity_type === "fathiha"
-              ? "സൂറത്തുൽ ഫാത്തിഹ"
-              : "സൂറത്ത് യാസീൻ"
-              } × ${item.count.toLocaleString("en-IN")}`}
-            badge={item.activity_type === "fathiha" ? "Fathiha" : "Ya-Sin"}
+              ? "Fathiha + Ikhlas + Falaq + Naas"
+              : "Surah Ya-Sin"
+              } ? × ${item.count.toLocaleString("en-IN")}`}
+            badge={item.activity_type === "fathiha" ? "Fathiha + Ikhlas + Falaq + Naas" : "Ya-Sin"}
             date={item.created_at}
             onDelete={() => onDelete(item.id)}
           />

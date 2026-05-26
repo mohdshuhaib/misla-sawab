@@ -5,7 +5,6 @@ export type ManagerRoom = {
   id: string;
   slug: string;
   title: string;
-  purpose: string;
   for_whom: string;
   description: string | null;
   default_language: "ml" | "en";
@@ -91,7 +90,6 @@ export async function updateManagerMajlis(params: {
   roomId: string;
   managerToken: string;
   title: string;
-  purpose: string;
   forWhom: string;
   description: string;
   defaultLanguage: "ml" | "en";
@@ -101,7 +99,6 @@ export async function updateManagerMajlis(params: {
     p_room_id: params.roomId,
     p_manager_token: params.managerToken,
     p_title: params.title,
-    p_purpose: params.purpose,
     p_for_whom: params.forWhom,
     p_description: params.description,
     p_default_language: params.defaultLanguage,

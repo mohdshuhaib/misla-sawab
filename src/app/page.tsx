@@ -36,7 +36,7 @@ export default async function HomePage() {
     },
     {
       icon: Share2,
-      title: "WhatsApp Share",
+      title: home("whatsappShare"),
       description: activities("shareDescription"),
     },
   ];

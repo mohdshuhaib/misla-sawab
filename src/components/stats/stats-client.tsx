@@ -9,12 +9,10 @@ import {
   CheckCircle2,
   CircleDashed,
   Heart,
-  History,
   Loader2,
   MessageCircleHeart,
   RefreshCw,
   Sparkles,
-  Trophy,
   UsersRound,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -22,8 +20,6 @@ import { toast } from "sonner";
 import {
   getMajlisStats,
   type MajlisStatsState,
-  type RecentActivityItem,
-  type TopContributorStat,
 } from "@/lib/majlis/stats";
 import { useMajlisRealtime, type RealtimeTable } from "@/hooks/use-majlis-realtime";
 
@@ -37,7 +33,6 @@ type StatsClientProps = {
   slug: string;
   title: string;
   forWhom: string;
-  purpose: string;
 };
 
 export function StatsClient({
@@ -45,7 +40,6 @@ export function StatsClient({
   slug,
   title,
   forWhom,
-  purpose,
 }: StatsClientProps) {
   const [stats, setStats] = useState<MajlisStatsState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -114,7 +108,6 @@ export function StatsClient({
 
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 <InfoBox label="ആർക്കുവേണ്ടി" value={forWhom} />
-                <InfoBox label="നിയ്യത്ത് / ഉദ്ദേശ്യം" value={purpose} />
               </div>
 
               <p className="mt-5 max-w-3xl text-base leading-8 text-muted-foreground">
@@ -167,7 +160,7 @@ export function StatsClient({
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <StatsCard
             icon={Sparkles}
-            label="മൊത്തം ഫാത്തിഹ"
+            label="Total Fathiha + Ikhlas + Falaq + Naas"
             value={stats?.totalFathihaCount || 0}
           />
 
@@ -178,11 +171,6 @@ export function StatsClient({
           />
 
           <CurrentKhatamCard stats={stats} />
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <TopContributorsCard contributors={stats?.topContributors || []} />
-          <RecentActivityCard recentActivity={stats?.recentActivity || []} />
         </div>
 
         <CompletedKhatamHistoryCard stats={stats} />
@@ -285,161 +273,6 @@ function CurrentKhatamCard({ stats }: { stats: MajlisStatsState | null }) {
         )}
       </CardContent>
     </Card>
-  );
-}
-
-function TopContributorsCard({
-  contributors,
-}: {
-  contributors: TopContributorStat[];
-}) {
-  return (
-    <Card className="glass-card rounded-[2rem] border-emerald-100">
-      <CardContent className="p-5">
-        <div className="mb-4 flex items-center gap-3">
-          <Trophy className="h-5 w-5 text-emerald-600" />
-          <div>
-            <h2 className="text-xl font-black text-emerald-950 dark:text-emerald-50">
-              Top Contributors
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              എല്ലാ പ്രവർത്തനങ്ങളും ചേർന്നുള്ള കണക്ക്
-            </p>
-          </div>
-        </div>
-
-        {contributors.length === 0 ? (
-          <p className="rounded-3xl bg-emerald-50 p-4 text-sm text-muted-foreground dark:bg-emerald-950/40">
-            ഇതുവരെ contributor stats ലഭ്യമല്ല.
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {contributors.map((item, index) => (
-              <div
-                key={item.contributor_id}
-                className="rounded-3xl border border-emerald-100 bg-white/70 p-4 dark:border-emerald-900 dark:bg-slate-950/40"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-100 font-bold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100">
-                      {index + 1}
-                    </div>
-
-                    <div>
-                      <p className="font-bold text-emerald-950 dark:text-emerald-50">
-                        {item.contributor_name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Activity score:{" "}
-                        {item.total_activity_score.toLocaleString("en-IN")}
-                      </p>
-                    </div>
-                  </div>
-
-                  <Badge className="rounded-full bg-emerald-600 text-white">
-                    #{index + 1}
-                  </Badge>
-                </div>
-
-                <div className="mt-4 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
-                  <MiniStat label="Juz" value={item.juz_count} />
-                  <MiniStat label="Dhikr" value={item.dhikr_count} />
-                  <MiniStat label="Fathiha" value={item.fathiha_count} />
-                  <MiniStat label="Ya-Sin" value={item.yaseen_count} />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-function MiniStat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-2xl bg-emerald-50 p-3 dark:bg-emerald-950/40">
-      <p className="text-muted-foreground">{label}</p>
-      <p className="mt-1 font-black text-emerald-950 dark:text-emerald-50">
-        {value.toLocaleString("en-IN")}
-      </p>
-    </div>
-  );
-}
-
-function RecentActivityCard({
-  recentActivity,
-}: {
-  recentActivity: RecentActivityItem[];
-}) {
-  return (
-    <Card className="glass-card rounded-[2rem] border-emerald-100">
-      <CardContent className="p-5">
-        <div className="mb-4 flex items-center gap-3">
-          <History className="h-5 w-5 text-emerald-600" />
-          <div>
-            <h2 className="text-xl font-black text-emerald-950 dark:text-emerald-50">
-              Recent Activity
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              പുതിയ സംഭാവനകൾ
-            </p>
-          </div>
-        </div>
-
-        {recentActivity.length === 0 ? (
-          <p className="rounded-3xl bg-emerald-50 p-4 text-sm text-muted-foreground dark:bg-emerald-950/40">
-            ഇതുവരെ പ്രവർത്തനങ്ങളില്ല.
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {recentActivity.map((item) => (
-              <div
-                key={`${item.type}-${item.id}`}
-                className="rounded-3xl border border-emerald-100 bg-white/70 p-4 dark:border-emerald-900 dark:bg-slate-950/40"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <ActivityBadge type={item.type} />
-                      <p className="font-bold text-emerald-950 dark:text-emerald-50">
-                        {item.contributor_name}
-                      </p>
-                    </div>
-
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      {item.label}
-                    </p>
-                  </div>
-
-                  <Badge className="rounded-full bg-emerald-600 text-white">
-                    {item.count.toLocaleString("en-IN")}
-                  </Badge>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-function ActivityBadge({ type }: { type: RecentActivityItem["type"] }) {
-  const labelMap = {
-    juz: "Juz",
-    dhikr: "Dhikr",
-    fathiha: "Fathiha",
-    yaseen: "Ya-Sin",
-  };
-
-  return (
-    <Badge
-      variant="outline"
-      className="rounded-full border-emerald-200 text-emerald-800 dark:border-emerald-800 dark:text-emerald-100"
-    >
-      {labelMap[type]}
-    </Badge>
   );
 }
 

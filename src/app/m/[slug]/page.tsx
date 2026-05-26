@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays, Heart, Sparkles } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 import {
   getEnabledActivities,
@@ -31,22 +32,19 @@ export async function generateMetadata({
     };
   }
 
-  const titleMl = `${majlis.for_whom} അവർക്കുവേണ്ടിയുള്ള മജ്ലിസ്`;
-  const titleEn = `Majlis for ${majlis.for_whom}`;
-
   return {
-    title: `${titleMl} | Misla Sawab`,
-    description: majlis.purpose,
+    title: `${majlis.title} | Misla Sawab`,
+    description: majlis.description || majlis.title,
     openGraph: {
-      title: titleMl,
-      description: `${majlis.purpose} | Misla Sawab`,
+      title: majlis.title,
+      description: `${majlis.description || majlis.title} | Misla Sawab`,
       siteName: "Misla Sawab",
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: titleEn,
-      description: majlis.purpose,
+      title: majlis.title,
+      description: majlis.description || majlis.title,
     },
   };
 }
@@ -54,6 +52,8 @@ export async function generateMetadata({
 export default async function PublicMajlisPage({ params }: PageProps) {
   const { slug } = await params;
   const majlis = await getPublicMajlisBySlug(slug);
+  const app = await getTranslations("app");
+  const t = await getTranslations("publicMajlis");
 
   if (!majlis) {
     notFound();
@@ -71,7 +71,7 @@ export default async function PublicMajlisPage({ params }: PageProps) {
         >
           <Link href="/">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            ഹോമിലേക്ക് മടങ്ങുക
+            {app("backHome")}
           </Link>
         </Button>
 
@@ -83,27 +83,18 @@ export default async function PublicMajlisPage({ params }: PageProps) {
             <div className="relative">
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/70 px-4 py-2 text-sm font-medium text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-100">
                 <Sparkles className="h-4 w-4" />
-                നന്മയുടെ മജ്ലിസ്
+                {t("badge")}
               </div>
 
               <h1 className="max-w-4xl text-3xl font-black tracking-tight text-emerald-950 dark:text-emerald-50 sm:text-4xl lg:text-5xl">
                 {majlis.title}
               </h1>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-3xl border border-emerald-100 bg-white/60 p-4 dark:border-emerald-900 dark:bg-slate-950/30">
-                  <p className="text-sm text-muted-foreground">ആർക്കുവേണ്ടി</p>
+              <div className="mt-5">
+                <div className="max-w-md rounded-3xl border border-emerald-100 bg-white/60 p-4 dark:border-emerald-900 dark:bg-slate-950/30">
+                  <p className="text-sm text-muted-foreground">{t("forWhom")}</p>
                   <p className="mt-1 text-lg font-bold text-emerald-950 dark:text-emerald-50">
                     {majlis.for_whom}
-                  </p>
-                </div>
-
-                <div className="rounded-3xl border border-emerald-100 bg-white/60 p-4 dark:border-emerald-900 dark:bg-slate-950/30">
-                  <p className="text-sm text-muted-foreground">
-                    നിയ്യത്ത് / ഉദ്ദേശ്യം
-                  </p>
-                  <p className="mt-1 text-lg font-bold text-emerald-950 dark:text-emerald-50">
-                    {majlis.purpose}
                   </p>
                 </div>
               </div>
@@ -117,7 +108,7 @@ export default async function PublicMajlisPage({ params }: PageProps) {
               <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-100">
                   <Heart className="h-4 w-4" />
-                  Public Contribution Majlis
+                  {app("publicContributionMajlis")}
                 </span>
 
                 <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-emerald-800 dark:bg-slate-950/50 dark:text-emerald-100">
@@ -137,16 +128,15 @@ export default async function PublicMajlisPage({ params }: PageProps) {
           enabledActivities={enabledActivities}
           slug={majlis.slug}
           forWhom={majlis.for_whom}
-          purpose={majlis.purpose}
         />
 
         <section>
           <div className="mb-4">
             <h2 className="text-2xl font-black text-emerald-950 dark:text-emerald-50">
-              പങ്കെടുക്കാൻ തിരഞ്ഞെടുക്കുക
+              {t("chooseActivity")}
             </h2>
             <p className="mt-1 text-muted-foreground">
-              താഴെ കാണുന്ന പ്രവർത്തനങ്ങളിൽ നിങ്ങൾക്ക് സാധിക്കുന്നതിൽ പങ്കെടുക്കാം.
+              {t("chooseActivityDescription")}
             </p>
           </div>
 

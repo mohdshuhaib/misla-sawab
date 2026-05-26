@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BookOpen, HeartHandshake, MessageCircleHeart, Share2, Sparkles } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import type { ActivityType } from "@/lib/majlis/get-majlis";
 import type { ShareActivityType } from "@/lib/share/messages";
@@ -13,42 +14,41 @@ type ShareButtonGroupProps = {
   enabledActivities: ActivityType[];
   slug: string;
   forWhom: string;
-  purpose: string;
 };
 
 const shareOptions: {
   type: ShareActivityType;
-  label: string;
+  labelKey: string;
   activityType?: ActivityType;
   icon: typeof Share2;
 }[] = [
   {
     type: "full",
-    label: "Full Majlis",
+    labelKey: "fullMajlis",
     icon: Share2,
   },
   {
     type: "khatmul_quran",
     activityType: "khatmul_quran",
-    label: "Khatmul Qur’an",
+    labelKey: "khatmulQuran",
     icon: BookOpen,
   },
   {
     type: "dhikr",
     activityType: "dhikr",
-    label: "Dhikr / Adhkar",
+    labelKey: "dhikr",
     icon: MessageCircleHeart,
   },
   {
     type: "yaseen",
     activityType: "yaseen",
-    label: "Surah Ya-Sin",
+    labelKey: "yaseen",
     icon: HeartHandshake,
   },
   {
     type: "fathiha",
     activityType: "fathiha",
-    label: "Surah Al-Fatihah",
+    labelKey: "fathiha",
     icon: Sparkles,
   },
 ];
@@ -57,8 +57,9 @@ export function ShareButtonGroup({
   enabledActivities,
   slug,
   forWhom,
-  purpose,
 }: ShareButtonGroupProps) {
+  const share = useTranslations("share");
+  const activities = useTranslations("activities");
   const [selectedShare, setSelectedShare] = useState<{
     type: ShareActivityType;
     label: string;
@@ -80,10 +81,10 @@ export function ShareButtonGroup({
         <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <p className="font-bold text-emerald-950 dark:text-emerald-50">
-              Share Majlis
+              {share("title")}
             </p>
             <p className="text-sm text-muted-foreground">
-              Malayalam message തയ്യാറാക്കി WhatsApp-ൽ share ചെയ്യാം.
+              {share("description")}
             </p>
           </div>
 
@@ -95,22 +96,28 @@ export function ShareButtonGroup({
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {visibleShareOptions.map((option) => {
             const Icon = option.icon;
+            const label =
+              option.type === "full"
+                ? share("fullMajlis")
+                : activities(option.labelKey);
 
             return (
               <Button
                 key={option.type}
                 type="button"
                 variant="outline"
-                className="h-12 justify-start rounded-full border-emerald-200 bg-white/80 text-emerald-800 hover:bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-100"
+                className="h-auto min-h-12 w-full justify-start rounded-2xl border-emerald-200 bg-white/80 px-4 py-3 text-left text-emerald-800 whitespace-normal hover:bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-100"
                 onClick={() =>
                   setSelectedShare({
                     type: option.type,
-                    label: option.label,
+                    label,
                   })
                 }
               >
                 <Icon className="mr-2 h-4 w-4" />
-                Share {option.label}
+                <span className="min-w-0 wrap-break-word leading-5">
+                  {share("shareButton", { label })}
+                </span>
               </Button>
             );
           })}
@@ -129,7 +136,6 @@ export function ShareButtonGroup({
           activityLabel={selectedShare.label}
           slug={slug}
           forWhom={forWhom}
-          purpose={purpose}
         />
       ) : null}
     </>
