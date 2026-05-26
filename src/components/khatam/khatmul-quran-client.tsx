@@ -67,6 +67,7 @@ export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQura
   const [isCompleting, setIsCompleting] = useState(false);
   const [isCreatingNext, setIsCreatingNext] = useState(false);
   const markSectionRef = useRef<HTMLDivElement | null>(null);
+  
 
   const loadKhatam = useCallback(async () => {
     try {
@@ -401,7 +402,7 @@ function KhatamPanel({
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-2 text-emerald-900">
                       <UsersRound className="h-5 w-5" />
-                      <p className="break-words font-semibold">{selectedJuz.length > 0 ? "Selected: " + selectedJuz.join(", ") : "Select Juz to reserve"}</p>
+                      <p className="wrap-break-word font-semibold">{selectedJuz.length > 0 ? "Selected: " + selectedJuz.join(", ") : "Select Juz to reserve"}</p>
                     </div>
                     <Button type="button" disabled={isReserving || selectedJuz.length === 0} className="h-12 rounded-full bg-emerald-600 px-7 text-white hover:bg-emerald-700" onClick={reserveSelectedJuz}>
                       {isReserving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Clock3 className="mr-2 h-4 w-4" />}
@@ -445,7 +446,7 @@ function PrivacyMessage() {
   return (
     <div className="rounded-3xl border border-emerald-100 bg-emerald-50 p-4 text-sm leading-7 text-emerald-950">
       <ShieldCheck className="mb-2 h-5 w-5 text-emerald-700" />
-      Ningal ethra othi allengil cholli enn ullath vere aarkkum ariyan pattilla. Ath kondu ningalude sawab nashtappedum ennu bhayakkanda. Per nalkunnath enthinu ennu vechal ningal edukkunna Juz poorthiyakumbol ath poorthiyayi ennu mark cheyyan per aavashyam undu.
+      നിങ്ങൾ എത്ര ഓതിയെന്നോ എത്ര ചൊല്ലിയെന്നോ മറ്റാർക്കും അറിയാൻ കഴിയില്ല. അതിനാൽ നിങ്ങളുടെ സവാബ് നഷ്ടപ്പെടുമോ എന്ന് ഭയപ്പെടേണ്ടതില്ല. പേര് നൽകുന്നത്, നിങ്ങൾ ഏറ്റെടുത്ത ജുസ് പൂർത്തിയാക്കിയ ശേഷം അത് പൂർത്തിയായി എന്ന് അടയാളപ്പെടുത്തുന്നതിനുവേണ്ടിയാണ്.
     </div>
   );
 }

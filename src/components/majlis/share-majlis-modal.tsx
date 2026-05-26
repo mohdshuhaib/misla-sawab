@@ -148,7 +148,7 @@ export function ShareMajlisModal({
                   onClick={copyMessage}
                 >
                   <MessageSquareText className="mr-2 h-4 w-4" />
-                  <span className="min-w-0 break-words">{share("copyMessage")}</span>
+                  <span className="min-w-0 wrap-break-word">{share("copyMessage")}</span>
                 </Button>
 
                 <Button
@@ -158,7 +158,7 @@ export function ShareMajlisModal({
                   onClick={copyLink}
                 >
                   <LinkIcon className="mr-2 h-4 w-4" />
-                  <span className="min-w-0 break-words">{share("copyLink")}</span>
+                  <span className="min-w-0 wrap-break-word">{share("copyLink")}</span>
                 </Button>
 
                 <Button
@@ -177,7 +177,7 @@ export function ShareMajlisModal({
                   onClick={nativeShare}
                 >
                   <Share2 className="mr-2 h-4 w-4" />
-                  <span className="min-w-0 break-words">{share("mobileShare")}</span>
+                  <span className="min-w-0 wrap-break-word">{share("mobileShare")}</span>
                 </Button>
               </div>
 
@@ -188,7 +188,7 @@ export function ShareMajlisModal({
                 onClick={() => onOpenChange(false)}
               >
                 <X className="mr-2 h-4 w-4" />
-                <span className="min-w-0 break-words">{share("close")}</span>
+                <span className="min-w-0 wrap-break-word">{share("close")}</span>
               </Button>
             </div>
           </div>

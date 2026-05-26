@@ -143,7 +143,8 @@
     "markingCompleted": "Marking completed...",
     "iCompleted": "I completed my recitation",
     "selectedNow": "Selected now",
-    "available": "Available"
+    "available": "Available",
+    "privacyMessage": "No one else will be able to know how much you have recited or chanted. So, you do not need to worry that your reward will be lost. Your name is requested only to mark the Juz you selected as completed once you finish it."
   },
   "dhikr": {
     "pageBadge": "Dhikr / Adhkar Majlis",
