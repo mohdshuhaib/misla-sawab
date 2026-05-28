@@ -11,8 +11,8 @@ export const NAV_LINKS = [
 
 export const ACTIVITY_LABELS = {
   khatmul_quran: {
-    ml: "ഖത്ത്മുൽ ഖുർആൻ",
-    en: "Khatmul Qur'an",
+    ml: "ختم القرآن",
+    en: "ختم القرآن",
   },
   dhikr: {
     ml: "ദിക്റ് / അദ്കാർ",

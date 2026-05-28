@@ -57,7 +57,7 @@ function isFullyReserved(khatam: KhatamState) {
   return khatam.contributions.length >= 30;
 }
 
-export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQuranClientProps) {
+export function KhatmulQuranClient({ roomId, slug, title }: KhatmulQuranClientProps) {
   const [overview, setOverview] = useState<KhatamOverview | null>(null);
   const [expandedKhatamId, setExpandedKhatamId] = useState<string | null>(null);
   const [selectedJuz, setSelectedJuz] = useState<number[]>([]);
@@ -79,7 +79,7 @@ export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQura
           ...nextOverview.reservedPendingKhatams.map((khatam) => khatam.id),
         ].filter(Boolean);
         if (current && allIds.includes(current)) return current;
-        return nextOverview.currentKhatam?.id || nextOverview.reservedPendingKhatams[0]?.id || null;
+        return null;
       });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not load Khatam details");
@@ -110,7 +110,7 @@ export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQura
     try {
       setIsCreatingNext(true);
       await createNextKhatam(roomId);
-      toast.success("New Khatam created.");
+      toast.success("പുതിയ ختم القرآن തുടങ്ങി.");
       setSelectedJuz([]);
       await loadKhatam();
     } catch (error) {
@@ -139,17 +139,11 @@ export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQura
             <div className="relative">
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/70 px-4 py-2 text-sm font-medium text-emerald-800">
                 <BookOpen className="h-4 w-4" />
-                Khatmul Qur&apos;an Majlis
+                ختم القرآن
               </div>
               <h1 className="max-w-4xl text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl lg:text-5xl">{title}</h1>
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-3xl border border-emerald-100 bg-white/60 p-4">
-                  <p className="text-sm text-muted-foreground">For whom</p>
-                  <p className="mt-1 text-lg font-bold text-emerald-950">{forWhom}</p>
-                </div>
-              </div>
               <p className="mt-5 max-w-3xl text-base leading-8 text-muted-foreground">
-                Reserve the Juz you can recite. After finishing, use the same name to mark your reserved Juz as read.
+                നിങ്ങൾക്ക് പാരായണം ചെയ്യാൻ കഴിയുന്ന ജുസ് ഏറ്റെടുക്കുക. പൂർത്തിയായ ശേഷം അതേ പേരിൽ ജുസ് പൂര്‍ത്തിയാക്കി എന്ന് രേഖപ്പെടുത്തുക.
               </p>
             </div>
           </CardContent>
@@ -160,7 +154,7 @@ export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQura
             <CardContent className="flex min-h-56 items-center justify-center p-8">
               <div className="text-center">
                 <Loader2 className="mx-auto h-8 w-8 animate-spin text-emerald-600" />
-                <p className="mt-3 text-muted-foreground">Loading Khatam details...</p>
+                <p className="mt-3 text-muted-foreground">ختم القرآن വിവരങ്ങൾ ലഭ്യമാക്കുന്നു...</p>
               </div>
             </CardContent>
           </Card>
@@ -170,8 +164,8 @@ export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQura
           <Card className="glass-card rounded-[2rem]">
             <CardContent className="p-8 text-center">
               <BookOpen className="mx-auto h-10 w-10 text-emerald-600" />
-              <h2 className="mt-4 text-2xl font-black text-emerald-950">Khatam not found</h2>
-              <p className="mt-2 text-muted-foreground">No active Khatam is available in this Majlis.</p>
+              <h2 className="mt-4 text-2xl font-black text-emerald-950">ختم القرآن കണ്ടെത്തിയില്ല</h2>
+              <p className="mt-2 text-muted-foreground">ഈ മജ്ലിസിൽ സജീവമായ ختم القرآن ലഭ്യമല്ല.</p>
               {canCreateNext ? <CreateNextButton isCreating={isCreatingNext} onClick={handleCreateNextKhatam} /> : null}
             </CardContent>
           </Card>
@@ -181,8 +175,8 @@ export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQura
           <KhatamPanel
             khatam={overview.currentKhatam}
             expanded={expandedKhatamId === overview.currentKhatam.id}
-            title="Current Khatam"
-            description="This Khatam still has Juz available to reserve."
+            title="നിലവിലെ ختم القرآن"
+            description="ഈ ختم القرآن-ൽ ഇപ്പോഴും ഏറ്റെടുക്കാൻ ജുസുകൾ ലഭ്യമാണ്."
             selectedJuz={selectedJuz}
             setSelectedJuz={setSelectedJuz}
             displayName={displayName}
@@ -203,9 +197,9 @@ export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQura
         {overview && overview.reservedPendingKhatams.length > 0 ? (
           <div className="space-y-3">
             <div>
-              <h2 className="text-xl font-black text-emerald-950">Reserved Khatams waiting for completion</h2>
+              <h2 className="text-xl font-black text-emerald-950">പൂര്‍ത്തിയാക്കാൻ ബാക്കിയുള്ള ختم القرآن</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                These Khatams are fully reserved but not fully marked as read yet. Open your Khatam and update your Juz status.
+                ഇവയിലെ എല്ലാ ജുസുകളും ഏറ്റെടുത്തിട്ടുണ്ട്. പക്ഷേ എല്ലാം പൂര്‍ത്തിയാക്കി എന്ന് രേഖപ്പെടുത്തിയിട്ടില്ല. നിങ്ങളുടെ ختم القرآن തുറന്ന് ജുസ് നില പുതുക്കാം.
               </p>
             </div>
             {overview.reservedPendingKhatams.map((khatam) => (
@@ -213,8 +207,8 @@ export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQura
                 key={khatam.id}
                 khatam={khatam}
                 expanded={expandedKhatamId === khatam.id}
-                title={"Khatam " + khatam.khatam_number}
-                description="All Juz are reserved. Participants can still mark their own Juz as read."
+                title={"ختم القرآن " + khatam.khatam_number}
+                description="എല്ലാ ജുസുകളും ഏറ്റെടുത്തിട്ടുണ്ട്. ഓരോരുത്തർക്കും സ്വന്തം ജുസ് പൂര്‍ത്തിയാക്കി എന്ന് രേഖപ്പെടുത്താം."
                 selectedJuz={selectedJuz}
                 setSelectedJuz={setSelectedJuz}
                 displayName={displayName}
@@ -237,9 +231,9 @@ export function KhatmulQuranClient({ roomId, slug, title, forWhom }: KhatmulQura
           <Card className="glass-card rounded-[2rem] border-emerald-100">
             <CardContent className="p-6 text-center">
               <Plus className="mx-auto h-10 w-10 text-emerald-600" />
-              <h2 className="mt-3 text-2xl font-black text-emerald-950">All Juz are reserved</h2>
+              <h2 className="mt-3 text-2xl font-black text-emerald-950">എല്ലാ ജുസുകളും ഏറ്റെടുത്തു</h2>
               <p className="mx-auto mt-2 max-w-2xl text-muted-foreground">
-                You can start the next Khatam now. The fully reserved Khatam will remain visible here so participants can mark their Juz as read.
+                ഇപ്പോൾ അടുത്ത ختم القرآن തുടങ്ങാം. മുമ്പത്തെ ختم القرآن ഇവിടെ തന്നെ കാണും, അതിലെ ആളുകൾക്ക് അവരുടെ ജുസ് പൂര്‍ത്തിയാക്കി എന്ന് രേഖപ്പെടുത്താൻ കഴിയും.
               </p>
               <CreateNextButton isCreating={isCreatingNext} onClick={handleCreateNextKhatam} />
             </CardContent>
@@ -325,7 +319,7 @@ function KhatamPanel({
     try {
       setIsReserving(true);
       await selectJuzContribution({ roomId, khatamId: khatam.id, juzNumbers: selectedJuz, displayName });
-      toast.success("Juz reserved. After reading, mark it as completed.");
+      toast.success("ജുസ് ഏറ്റെടുത്തു. പാരായണം പൂർത്തിയായ ശേഷം പൂര്‍ത്തിയാക്കി എന്ന് രേഖപ്പെടുത്തുക.");
       setSelectedJuz([]);
       await onReload();
     } catch (error) {
@@ -349,7 +343,7 @@ function KhatamPanel({
     try {
       setIsCompleting(true);
       const result = await completeJuzContribution({ roomId, khatamId: khatam.id, juzNumbers: pendingNumbers, displayName });
-      toast.success(result?.khatam_completed ? "Alhamdulillah. Khatam completed." : "Your Juz has been marked completed.");
+      toast.success(result?.khatam_completed ? "അൽഹംദുലില്ലാഹ്. ختم القرآن പൂര്‍ത്തിയാക്കി." : "നിങ്ങളുടെ ജുസ് പൂര്‍ത്തിയാക്കി എന്ന് രേഖപ്പെടുത്തി.");
       await onReload();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not mark as completed.");
@@ -364,9 +358,9 @@ function KhatamPanel({
       <button type="button" className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6" onClick={onToggle}>
         <div>
           <p className="text-sm font-semibold text-emerald-700">{title}</p>
-          <h2 className="mt-1 text-2xl font-black text-emerald-950">Khatam {khatam.khatam_number}</h2>
+          <h2 className="mt-1 text-2xl font-black text-emerald-950">ختم القرآن {khatam.khatam_number}</h2>
           <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-          <p className="mt-2 text-sm font-semibold text-emerald-900">Reserved {reservedCount}/30 · Completed {completedCount}/30</p>
+          <p className="mt-2 text-sm font-semibold text-emerald-900">ഏറ്റെടുത്തത് {reservedCount}/30 · പൂര്‍ത്തിയാക്കി {completedCount}/30</p>
         </div>
         {expanded ? <ChevronUp className="h-5 w-5 text-emerald-700" /> : <ChevronDown className="h-5 w-5 text-emerald-700" />}
       </button>
@@ -375,38 +369,38 @@ function KhatamPanel({
         <CardContent className="space-y-6 border-t border-emerald-100 p-5 sm:p-6">
           <KhatamProgress khatam={khatam} />
           <div className="grid gap-4 md:grid-cols-3">
-            <MiniStatusCard label="Available Juz" value={availableJuzNumbers.length} tone="white" />
-            <MiniStatusCard label="Reserved / Pending" value={reservedCount - completedCount} tone="amber" />
-            <MiniStatusCard label="Completed" value={completedCount} tone="emerald" />
+            <MiniStatusCard label="ലഭ്യമായ ജുസ്" value={availableJuzNumbers.length} tone="white" />
+            <MiniStatusCard label="ഏറ്റെടുത്തത് / ബാക്കി" value={reservedCount - completedCount} tone="amber" />
+            <MiniStatusCard label="പൂര്‍ത്തിയാക്കി" value={completedCount} tone="emerald" />
           </div>
           {!completed ? (
             <Button type="button" variant="outline" className="h-auto min-h-12 w-full rounded-2xl border-amber-200 bg-amber-50 px-4 py-3 whitespace-normal text-amber-900 hover:bg-amber-100" onClick={onJumpToMark}>
               <ArrowDownCircle className="mr-2 h-5 w-5" />
-              Go down to mark your Juz as read
+              ജുസ് പൂര്‍ത്തിയാക്കി എന്ന് രേഖപ്പെടുത്താൻ താഴേക്ക് പോകുക
             </Button>
           ) : null}
           {canReserve ? (
             <Card className="rounded-[2rem] border-emerald-100">
               <CardContent className="space-y-5 p-5 sm:p-6">
                 <div>
-                  <h3 className="text-2xl font-black text-emerald-950">Reserve Juz</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">Enter your name and select the Juz you can recite.</p>
+                  <h3 className="text-2xl font-black text-emerald-950">ജുസ് ഏറ്റെടുക്കുക</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">നിങ്ങളുടെ പേര് നൽകി പാരായണം ചെയ്യാൻ കഴിയുന്ന ജുസ് തിരഞ്ഞെടുക്കുക.</p>
                 </div>
                 <PrivacyMessage />
                 <NameField displayName={displayName} setDisplayName={setDisplayName} allowNew />
                 <div className="flex flex-col gap-2 sm:flex-row">
-                  <Button type="button" variant="outline" className="h-12 rounded-full" onClick={() => setSelectedJuz(availableJuzNumbers)} disabled={availableJuzNumbers.length === 0}>Select all available</Button>
+                  <Button type="button" variant="outline" className="h-12 rounded-full" onClick={() => setSelectedJuz(availableJuzNumbers)} disabled={availableJuzNumbers.length === 0}>ലഭ്യമായവ എല്ലാം തിരഞ്ഞെടുക്കുക</Button>
                   <Button type="button" variant="ghost" className="h-12 rounded-full" onClick={() => setSelectedJuz([])} disabled={selectedJuz.length === 0}>Clear</Button>
                 </div>
                 <div className="rounded-3xl bg-emerald-50 p-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-2 text-emerald-900">
                       <UsersRound className="h-5 w-5" />
-                      <p className="wrap-break-word font-semibold">{selectedJuz.length > 0 ? "Selected: " + selectedJuz.join(", ") : "Select Juz to reserve"}</p>
+                      <p className="wrap-break-word font-semibold">{selectedJuz.length > 0 ? "തിരഞ്ഞെടുത്തത്: " + selectedJuz.join(", ") : "ഏറ്റെടുക്കാൻ ജുസ് തിരഞ്ഞെടുക്കുക"}</p>
                     </div>
                     <Button type="button" disabled={isReserving || selectedJuz.length === 0} className="h-12 rounded-full bg-emerald-600 px-7 text-white hover:bg-emerald-700" onClick={reserveSelectedJuz}>
                       {isReserving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Clock3 className="mr-2 h-4 w-4" />}
-                      Reserve Juz
+                      ജുസ് ഏറ്റെടുക്കുക
                     </Button>
                   </div>
                 </div>
@@ -420,18 +414,18 @@ function KhatamPanel({
             <Card ref={markSectionRef} className="rounded-[2rem] border-amber-100">
               <CardContent className="space-y-5 p-5 sm:p-6">
                 <div>
-                  <h3 className="text-2xl font-black text-emerald-950">Mark my reserved Juz as read</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">Type or select the same name used for reservation.</p>
+                  <h3 className="text-2xl font-black text-emerald-950">എന്റെ ജുസ് പൂര്‍ത്തിയാക്കി എന്ന് രേഖപ്പെടുത്തുക</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">ജുസ് ഏറ്റെടുത്തപ്പോൾ നൽകിയ അതേ പേര് തിരഞ്ഞെടുത്തുക.</p>
                 </div>
                 <PrivacyMessage />
                 <NameField displayName={displayName} setDisplayName={setDisplayName} allowNew={false} />
                 <div className="grid gap-4 md:grid-cols-2">
-                  <JuzSummary title="My pending Juz" emptyText={displayName.trim().length < 2 ? "Enter your name to find pending Juz." : "No pending Juz found for this name."} items={myPendingJuz.map((item) => item.juz_number)} tone="amber" />
-                  <JuzSummary title="My completed Juz" emptyText={displayName.trim().length < 2 ? "Enter your name to see completed Juz." : "No completed Juz found for this name."} items={myCompletedJuz.map((item) => item.juz_number)} tone="emerald" />
+                  <JuzSummary title="പൂര്‍ത്തിയാക്കാനുള്ള ജുസ്" emptyText={displayName.trim().length < 2 ? "പേര് തിരഞ്ഞെടുത്താൽ ജുസ് കാണാം." : "ഈ പേരിൽ പൂര്‍ത്തിയാക്കാനുള്ള ജുസ് ഇല്ല."} items={myPendingJuz.map((item) => item.juz_number)} tone="amber" />
+                  <JuzSummary title="പൂര്‍ത്തിയാക്കിയ ജുസ്" emptyText={displayName.trim().length < 2 ? "പേര് തിരഞ്ഞെടുത്താൽ പൂര്‍ത്തിയാക്കിയ ജുസ് കാണാം." : "ഈ പേരിൽ പൂര്‍ത്തിയാക്കിയ ജുസ് ഇല്ല."} items={myCompletedJuz.map((item) => item.juz_number)} tone="emerald" />
                 </div>
                 <Button type="button" disabled={isCompleting || myPendingJuz.length === 0} className="h-auto min-h-12 w-full rounded-full bg-emerald-600 px-7 py-3 whitespace-normal text-white hover:bg-emerald-700" onClick={completeMyPendingJuz}>
                   {isCompleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
-                  I completed my reserved Juz
+                  ഞാൻ ജുസ് പൂര്‍ത്തിയാക്കി
                 </Button>
               </CardContent>
             </Card>
@@ -454,7 +448,7 @@ function PrivacyMessage() {
 function NameField({ displayName, setDisplayName, allowNew = true }: { displayName: string; setDisplayName: (value: string) => void; allowNew?: boolean }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-semibold text-emerald-950">Your name</label>
+      <label className="mb-2 block text-sm font-semibold text-emerald-950">നിങ്ങളുടെ പേര്</label>
       <NameAutocomplete value={displayName} onChange={setDisplayName} placeholder="Example: Shuhaib" allowNew={allowNew} />
     </div>
   );
@@ -474,7 +468,7 @@ function CreateNextButton({ isCreating, onClick }: { isCreating: boolean; onClic
   return (
     <Button type="button" disabled={isCreating} className="mt-6 h-auto min-h-12 rounded-full bg-emerald-600 px-7 py-3 whitespace-normal text-white hover:bg-emerald-700" onClick={onClick}>
       {isCreating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
-      Create New Khatam
+      പുതിയ ختم القرآن തുടങ്ങുക
     </Button>
   );
 }

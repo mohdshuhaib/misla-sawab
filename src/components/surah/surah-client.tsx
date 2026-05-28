@@ -49,13 +49,13 @@ const surahConfig = {
     icon: BookHeart,
   },
   fathiha: {
-    pageBadge: "Fathiha + Ikhlas + Falaq + Naas Recitation Majlis",
-    heading: "Fathiha + Ikhlas + Falaq + Naas",
+    pageBadge: "ഫാത്തിഹ + ഇഖ്ലാസ് + ഫലഖ് + നാസ് പാരായണ മജ്ലിസ്",
+    heading: "ഫാത്തിഹ + ഇഖ്ലാസ് + ഫലഖ് + നാസ്",
     description:
-      "Record the number of Fathiha + Ikhlas + Falaq + Naas recitations under your name.",
-    totalLabel: "Total Fathiha + Ikhlas + Falaq + Naas Recitations",
-    submitSuccess: "Fathiha + Ikhlas + Falaq + Naas recitation recorded",
-    placeholder: "Example: 11",
+      "നിങ്ങൾ പാരായണം ചെയ്ത ഫാത്തിഹ, ഇഖ്ലാസ്, ഫലഖ്, നാസ് എന്നിവയുടെ എണ്ണം നിങ്ങളുടെ പേരിൽ രേഖപ്പെടുത്തുക.",
+    totalLabel: "മൊത്തം ഫാത്തിഹ + ഇഖ്ലാസ് + ഫലഖ് + നാസ് പാരായണം",
+    submitSuccess: "പാരായണം രേഖപ്പെടുത്തി",
+    placeholder: "ഉദാ: 11",
     icon: Sparkles,
   },
 } as const;
@@ -64,7 +64,6 @@ export function SurahClient({
   roomId,
   slug,
   title,
-  forWhom,
   activityType,
 }: SurahClientProps) {
   const config = surahConfig[activityType];
@@ -176,16 +175,6 @@ export function SurahClient({
               <h1 className="max-w-4xl text-3xl font-black tracking-tight text-emerald-950 dark:text-emerald-50 sm:text-4xl lg:text-5xl">
                 {title}
               </h1>
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-3xl border border-emerald-100 bg-white/60 p-4 dark:border-emerald-900 dark:bg-slate-950/30">
-                  <p className="text-sm text-muted-foreground">ആർക്കുവേണ്ടി</p>
-                  <p className="mt-1 text-lg font-bold text-emerald-950 dark:text-emerald-50">
-                    {forWhom}
-                  </p>
-                </div>
-
-              </div>
 
               <p className="mt-5 max-w-3xl text-base leading-8 text-muted-foreground">
                 {config.description}

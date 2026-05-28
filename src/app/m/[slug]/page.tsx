@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, CalendarDays, Heart, Sparkles } from "lucide-react";
+import { ArrowLeft, CalendarDays, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import {
@@ -106,11 +106,6 @@ export default async function PublicMajlisPage({ params }: PageProps) {
               ) : null}
 
               <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-100">
-                  <Heart className="h-4 w-4" />
-                  {app("publicContributionMajlis")}
-                </span>
-
                 <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-emerald-800 dark:bg-slate-950/50 dark:text-emerald-100">
                   <CalendarDays className="h-4 w-4" />
                   {new Date(majlis.created_at).toLocaleDateString("en-IN", {
@@ -123,12 +118,6 @@ export default async function PublicMajlisPage({ params }: PageProps) {
             </div>
           </CardContent>
         </Card>
-
-        <ShareButtonGroup
-          enabledActivities={enabledActivities}
-          slug={majlis.slug}
-          forWhom={majlis.for_whom}
-        />
 
         <section>
           <div className="mb-4">
@@ -145,6 +134,12 @@ export default async function PublicMajlisPage({ params }: PageProps) {
             enabledActivities={enabledActivities}
           />
         </section>
+
+        <ShareButtonGroup
+          enabledActivities={enabledActivities}
+          slug={majlis.slug}
+          forWhom={majlis.for_whom}
+        />
       </div>
     </main>
   );
