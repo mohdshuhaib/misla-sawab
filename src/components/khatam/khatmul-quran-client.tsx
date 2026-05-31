@@ -301,6 +301,10 @@ function KhatamPanel({
   const name = normalizeName(displayName);
   const myPendingJuz = khatam.contributions.filter((item) => item.status === "selected" && name.length >= 2 && normalizeName(item.contributor_name) === name).sort((a, b) => a.juz_number - b.juz_number);
   const myCompletedJuz = khatam.contributions.filter((item) => item.status === "completed" && name.length >= 2 && normalizeName(item.contributor_name) === name).sort((a, b) => a.juz_number - b.juz_number);
+  const [selectedPendingJuz, setSelectedPendingJuz] = useState<number[]>([]);
+  const validSelectedPendingJuz = selectedPendingJuz.filter((juzNumber) =>
+    myPendingJuz.some((item) => item.juz_number === juzNumber)
+  );
 
   function toggleJuz(juzNumber: number) {
     if (!canReserve || reservedJuzNumbers.has(juzNumber) || isReserving) return;
@@ -335,15 +339,16 @@ function KhatamPanel({
       toast.error("Please enter your name.");
       return;
     }
-    const pendingNumbers = myPendingJuz.map((item) => item.juz_number);
+    const pendingNumbers = validSelectedPendingJuz;
     if (pendingNumbers.length === 0) {
-      toast.error("No pending Juz was found for this name.");
+      toast.error("Please select the Juz you completed.");
       return;
     }
     try {
       setIsCompleting(true);
       const result = await completeJuzContribution({ roomId, khatamId: khatam.id, juzNumbers: pendingNumbers, displayName });
       toast.success(result?.khatam_completed ? "അൽഹംദുലില്ലാഹ്. ختم القرآن പൂര്‍ത്തിയാക്കി." : "നിങ്ങളുടെ ജുസ് പൂര്‍ത്തിയാക്കി എന്ന് രേഖപ്പെടുത്തി.");
+      setSelectedPendingJuz([]);
       await onReload();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not mark as completed.");
@@ -355,14 +360,24 @@ function KhatamPanel({
 
   return (
     <Card className="glass-card rounded-[2rem] border-emerald-100">
-      <button type="button" className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6" onClick={onToggle}>
-        <div>
+      <button
+        type="button"
+        className="group flex w-full items-center justify-between gap-4 p-5 text-left transition hover:bg-emerald-50/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 sm:p-6"
+        onClick={onToggle}
+        aria-expanded={expanded}
+      >
+        <div className="min-w-0">
           <p className="text-sm font-semibold text-emerald-700">{title}</p>
           <h2 className="mt-1 text-2xl font-black text-emerald-950">ختم القرآن {khatam.khatam_number}</h2>
           <p className="mt-1 text-sm text-muted-foreground">{description}</p>
           <p className="mt-2 text-sm font-semibold text-emerald-900">ഏറ്റെടുത്തത് {reservedCount}/30 · പൂര്‍ത്തിയാക്കി {completedCount}/30</p>
         </div>
-        {expanded ? <ChevronUp className="h-5 w-5 text-emerald-700" /> : <ChevronDown className="h-5 w-5 text-emerald-700" />}
+        <span className="flex shrink-0 items-center gap-2 rounded-full border border-emerald-200 bg-white px-2.5 py-2 text-xs font-black text-emerald-800 shadow-sm transition group-hover:border-emerald-400 group-hover:bg-emerald-100 sm:px-3">
+          <span className="hidden sm:inline">{expanded ? "അടയ്ക്കുക" : "വിവരം തുറക്കുക"}</span>
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-700 text-white shadow-md shadow-emerald-900/15 transition group-hover:bg-emerald-800">
+            {expanded ? <ChevronUp className="h-7 w-7" /> : <ChevronDown className="h-7 w-7" />}
+          </span>
+        </span>
       </button>
 
       {expanded ? (
@@ -420,12 +435,26 @@ function KhatamPanel({
                 <PrivacyMessage />
                 <NameField displayName={displayName} setDisplayName={setDisplayName} allowNew={false} />
                 <div className="grid gap-4 md:grid-cols-2">
-                  <JuzSummary title="പൂര്‍ത്തിയാക്കാനുള്ള ജുസ്" emptyText={displayName.trim().length < 2 ? "പേര് തിരഞ്ഞെടുത്താൽ ജുസ് കാണാം." : "ഈ പേരിൽ പൂര്‍ത്തിയാക്കാനുള്ള ജുസ് ഇല്ല."} items={myPendingJuz.map((item) => item.juz_number)} tone="amber" />
+                  <PendingJuzSelector
+                    title="പൂര്‍ത്തിയാക്കാനുള്ള ജുസ്"
+                    emptyText={displayName.trim().length < 2 ? "പേര് തിരഞ്ഞെടുത്താൽ ജുസ് കാണാം." : "ഈ പേരിൽ പൂര്‍ത്തിയാക്കാനുള്ള ജുസ് ഇല്ല."}
+                    items={myPendingJuz.map((item) => item.juz_number)}
+                    selectedItems={validSelectedPendingJuz}
+                    onToggle={(juzNumber) => {
+                      setSelectedPendingJuz((current) =>
+                        current.includes(juzNumber)
+                          ? current.filter((item) => item !== juzNumber)
+                          : [...current, juzNumber].sort((a, b) => a - b)
+                      );
+                    }}
+                  />
                   <JuzSummary title="പൂര്‍ത്തിയാക്കിയ ജുസ്" emptyText={displayName.trim().length < 2 ? "പേര് തിരഞ്ഞെടുത്താൽ പൂര്‍ത്തിയാക്കിയ ജുസ് കാണാം." : "ഈ പേരിൽ പൂര്‍ത്തിയാക്കിയ ജുസ് ഇല്ല."} items={myCompletedJuz.map((item) => item.juz_number)} tone="emerald" />
                 </div>
-                <Button type="button" disabled={isCompleting || myPendingJuz.length === 0} className="h-auto min-h-12 w-full rounded-full bg-emerald-600 px-7 py-3 whitespace-normal text-white hover:bg-emerald-700" onClick={completeMyPendingJuz}>
+                <Button type="button" disabled={isCompleting || validSelectedPendingJuz.length === 0} className="h-auto min-h-12 w-full rounded-full bg-emerald-600 px-7 py-3 whitespace-normal text-white hover:bg-emerald-700" onClick={completeMyPendingJuz}>
                   {isCompleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
-                  ഞാൻ ജുസ് പൂര്‍ത്തിയാക്കി
+                  {validSelectedPendingJuz.length > 0
+                    ? `തിരഞ്ഞെടുത്ത ${validSelectedPendingJuz.length} ജുസ് പൂര്‍ത്തിയാക്കി`
+                    : "പൂര്‍ത്തിയാക്കിയ ജുസ് തിരഞ്ഞെടുക്കുക"}
                 </Button>
               </CardContent>
             </Card>
@@ -450,6 +479,55 @@ function NameField({ displayName, setDisplayName, allowNew = true }: { displayNa
     <div>
       <label className="mb-2 block text-sm font-semibold text-emerald-950">നിങ്ങളുടെ പേര്</label>
       <NameAutocomplete value={displayName} onChange={setDisplayName} placeholder="Example: Shuhaib" allowNew={allowNew} />
+    </div>
+  );
+}
+
+function PendingJuzSelector({
+  title,
+  emptyText,
+  items,
+  selectedItems,
+  onToggle,
+}: {
+  title: string;
+  emptyText: string;
+  items: number[];
+  selectedItems: number[];
+  onToggle: (juzNumber: number) => void;
+}) {
+  return (
+    <div className="rounded-3xl border border-amber-100 bg-amber-50 p-4 text-amber-900">
+      <p className="font-bold">{title}</p>
+      {items.length === 0 ? (
+        <p className="mt-3 text-sm opacity-85">{emptyText}</p>
+      ) : (
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {items.map((juzNumber) => {
+            const selected = selectedItems.includes(juzNumber);
+
+            return (
+              <button
+                key={juzNumber}
+                type="button"
+                onClick={() => onToggle(juzNumber)}
+                className={`min-h-11 rounded-2xl border px-3 py-2 text-sm font-bold transition ${
+                  selected
+                    ? "border-emerald-600 bg-emerald-600 text-white"
+                    : "border-amber-200 bg-white/80 text-amber-900 hover:bg-amber-100"
+                }`}
+              >
+                Juz {juzNumber}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      {selectedItems.length > 0 ? (
+        <p className="mt-3 text-xs font-semibold">
+          തിരഞ്ഞെടുത്തത്: {selectedItems.join(", ")}
+        </p>
+      ) : null}
     </div>
   );
 }
